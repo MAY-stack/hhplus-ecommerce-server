@@ -6,7 +6,8 @@
 
 ### 요구사항 분석 자료
 - 요구사항 분석 및 정책 설정
-![요구사항 분석 및 정책 설정](https://github.com/user-attachments/assets/634f440c-ebc0-40c2-aa7e-dc6ca70c2cee)
+
+    ![요구사항 분석 및 정책 설정](https://github.com/user-attachments/assets/634f440c-ebc0-40c2-aa7e-dc6ca70c2cee)
 - 시퀀스 다이어 그램
   - 포인트 충전·조회
 
@@ -34,3 +35,33 @@
 
   - 결제
     ![image](https://github.com/user-attachments/assets/87214159-f976-454c-88a5-a2f636a766ae)
+
+- ERD
+  ![image](https://github.com/user-attachments/assets/c8def9e3-ff71-48e8-8e08-17a9bcf06665)
+
+  - users
+    - 사용자 기본 정보
+  - point, pointHistory
+    - 사용자 ID와 포인트 잔액, 수정 일시
+    - 포인트 충전/사용 내역
+  - coupon
+    - 쿠폰 틀
+    - 쿠폰의 정보, 잔여수량 등 
+  - couponIssuance
+    - 쿠폰 발급번호(고유번호)를 포함한 발급된 쿠폰의 정보
+  - product
+    - 제품 기본 정보
+  - order
+    - 주문자, 주문 금액, 쿠폰 적용 정보 등 주문 정보
+  - orderDetail
+    - 주문에 포함된 제품 상세 정보
+    - 주문 시의 제품 명, (nullable)옵션명, 제품 가격 포함
+  - payment
+    - 주문과 1:1 관계
+    - 결제 정보
+  - cart
+    - 장바구니 정보
+  - cartItem
+    - 장바구니에 담긴 제품 정보
+    - 구매 전의 제품 정보이기 때문에 제품id와 옵션id만 저장
+      (제품명, 옵션명, 가격 등 변동시 반영됨)
