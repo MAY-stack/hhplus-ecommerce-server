@@ -29,6 +29,11 @@
   - 결제
  
     ![결제](https://github.com/user-attachments/assets/9e242a90-d005-4c27-a2fe-196722676256)
+
+  - 장바구니
+ 
+    ![image](https://github.com/user-attachments/assets/610c91e3-f80f-4282-98a8-304ed955277c)
+ 
 - 플로우 차트
   - 주문
     ![image](https://github.com/user-attachments/assets/bd8ae13d-be20-4567-b34a-d0655e643105)
