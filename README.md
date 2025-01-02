@@ -7,7 +7,7 @@
 ### 요구사항 분석 자료
 - 요구사항 분석 및 정책 설정
 
-    ![요구사항 분석 및 정책 설정](https://github.com/user-attachments/assets/634f440c-ebc0-40c2-aa7e-dc6ca70c2cee)
+    ![image](https://github.com/user-attachments/assets/dc7589a4-15fe-4497-9e9c-710f2f3007a5)
 - 시퀀스 다이어 그램
   - 포인트 충전·조회
 
