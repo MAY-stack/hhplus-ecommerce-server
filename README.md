@@ -70,3 +70,5 @@
     - 장바구니에 담긴 제품 정보
     - 구매 전의 제품 정보이기 때문에 제품id와 옵션id만 저장
       (제품명, 옵션명, 가격 등 변동시 반영됨)
+      
+![image](https://github.com/user-attachments/assets/a6f34aec-bfd6-483a-a38d-f7a2c7b929cd)
