@@ -23,6 +23,6 @@ public class OrderController {
     @PostMapping
     public ResponseEntity<OrderResponse> postOrder(@RequestBody OrderRequest orderRequest) {
         OrderResponse orderResponse = OrderResponse.fromDto(orderFacade.makeOrder(orderRequest.toOrderDto()));
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok(orderResponse);
     }
 }
