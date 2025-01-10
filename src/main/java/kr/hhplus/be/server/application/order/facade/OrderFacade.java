@@ -56,8 +56,11 @@ public class OrderFacade {
             // 재고 확인 및 감량
             Product product = productService.validateStockAndReduceQuantityWithLock(orderProduct.getProductId(), orderProduct.getQuantity());
             // orderDetail 생성
+
             OrderDetail orderDetail = new OrderDetail(order.getId(), product, orderProduct.getQuantity());
+
             orderDetailList.add(orderDetail);
+
             // 총 주문 금액 추가
             order.addOrderAmount(orderDetail.getSubTotal());
         }
@@ -115,7 +118,7 @@ public class OrderFacade {
         return results.stream()
                 .map(row -> {
                     Long productId = (Long) row[0];
-                    Integer soldQuantity = (Integer) row[1];
+                    Integer soldQuantity = ((Long) row[1]).intValue();
                     Product product = productMap.get(productId);
 
                     if (product == null) {
