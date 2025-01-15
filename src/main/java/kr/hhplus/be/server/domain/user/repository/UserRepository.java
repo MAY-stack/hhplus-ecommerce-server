@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.domain.user.repository;
 
-import kr.hhplus.be.server.domain.user.entity.Users;
+import kr.hhplus.be.server.domain.user.entity.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface UserRepository {
     boolean existsById(String userId);
 
-    Users save(Users users);
+    Optional<User> findById(String userId);
 
-    Optional<Users> findById(String userId);
+    User save(User user);
 }
