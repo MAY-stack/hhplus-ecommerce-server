@@ -13,13 +13,10 @@ public interface OrderDetailJpaRepository extends JpaRepository<OrderDetail, Lon
     @Query("""
                 SELECT od.productId AS productId, SUM(od.quantity) AS totalQuantity
                 FROM OrderDetail od
-                JOIN Orders o ON od.orderId = o.id
+                JOIN Order o ON od.orderId = o.id
                 WHERE o.createdAt >= :startDate
                 GROUP BY od.productId
                 ORDER BY totalQuantity DESC
             """)
-    List<Object[]> findTopSellingProducts(
-            @Param("startDate") LocalDateTime startDate,
-            Pageable pageable
-    );
+    List<Object[]> findTopSellingProducts(@Param("startDate") LocalDateTime startDate, Pageable pageable);
 }

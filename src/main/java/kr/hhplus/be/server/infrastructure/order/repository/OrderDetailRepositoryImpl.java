@@ -16,15 +16,10 @@ public class OrderDetailRepositoryImpl implements OrderDetailRepository {
     private final OrderDetailJpaRepository orderDetailJpaRepository;
 
     @Override
-    public void saveAll(List<OrderDetail> orderDetailList) {
-        orderDetailJpaRepository.saveAll(orderDetailList);
+    public OrderDetail save(OrderDetail orderDetail) {
+        return orderDetailJpaRepository.save(orderDetail);
     }
-
-    @Override
-    public List<OrderDetail> findAll() {
-        return orderDetailJpaRepository.findAll();
-    }
-
+    
     @Override
     public List<Object[]> findTopSellingProducts(LocalDateTime startDate, Pageable pageable) {
         return orderDetailJpaRepository.findTopSellingProducts(startDate, pageable);

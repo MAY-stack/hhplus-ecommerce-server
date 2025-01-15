@@ -9,9 +9,8 @@ import java.util.List;
 
 @Repository
 public interface OrderDetailRepository {
-    void saveAll(List<OrderDetail> orderDetailList);
 
-    List<OrderDetail> findAll();
+    OrderDetail save(OrderDetail orderDetail);
 
     List<Object[]> findTopSellingProducts(LocalDateTime startDate, Pageable pageable);
 }
