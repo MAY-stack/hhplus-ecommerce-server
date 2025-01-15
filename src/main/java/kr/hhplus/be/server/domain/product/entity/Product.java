@@ -1,11 +1,8 @@
 package kr.hhplus.be.server.domain.product.entity;
 
 import jakarta.persistence.*;
-import kr.hhplus.be.server.domain.product.exception.InsufficientStockException;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import kr.hhplus.be.server.common.exception.ErrorMessage;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -15,6 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
+@Builder
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,6 +37,18 @@ public class Product {
     private LocalDateTime updatedAt;
 
     public Product(String name, Long price, Integer stock, Long categoryId) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException(ErrorMessage.PRODUCT_NAME_REQUIRED.getMessage());
+        }
+        if (stock <= 0) {
+            throw new IllegalArgumentException(ErrorMessage.MINIMUM_STOCK_VIOLATION.getMessage());
+        }
+        if (price <= 0) {
+            throw new IllegalArgumentException(ErrorMessage.MINIMUM_PRICE_VIOLATION.getMessage());
+        }
+        if (categoryId == null) {
+            throw new IllegalArgumentException(ErrorMessage.CATEGORY_ID_REQUIRED.getMessage());
+        }
         this.name = name;
         this.price = price;
         this.stock = stock;
@@ -48,7 +58,7 @@ public class Product {
     // 재고 확인 및 감소 메서드
     public void reduceStock(Integer quantity) {
         if (this.stock < quantity) {
-            throw new InsufficientStockException("재고가 부족합니다. 현재 재고: " + this.stock);
+            throw new IllegalArgumentException(ErrorMessage.PRODUCT_SOLD_OUT.getMessage());
         }
         this.stock -= quantity;
     }

@@ -4,6 +4,8 @@ import kr.hhplus.be.server.domain.product.entity.Product;
 import kr.hhplus.be.server.domain.product.repository.ProductRepository;
 import kr.hhplus.be.server.infrastructure.product.jpa.ProductJpaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -36,13 +38,13 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public List<Product> findAll() {
-        return productJpaRepository.findAll();
+    public Page<Product> findAll(Pageable pageable) {
+        return productJpaRepository.findAll(pageable);
     }
 
     @Override
-    public List<Product> findAllByCategoryId(Long categoryId) {
-        return productJpaRepository.findAllByCategoryId(categoryId);
+    public Page<Product> findAllByCategoryId(Long categoryId, Pageable pageable) {
+        return productJpaRepository.findAllByCategoryId(categoryId, pageable);
     }
 
     @Override
