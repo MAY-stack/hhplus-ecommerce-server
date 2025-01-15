@@ -153,4 +153,19 @@ class CouponIssuanceServiceTest {
         assertThat(foundUserCoupons).isEqualTo(userCoupons);
         verify(couponIssuanceRepository, times(1)).findAllByUserId(userId);
     }
+
+    @Test
+    @DisplayName("쿠폰의 상태를 Expire로 설정하고 저장한다")
+    void expireUnusedCoupon_ShouldUpdateStatusToExpiredAndSave() {
+        // Arrange
+        CouponIssuance couponIssuance = mock(CouponIssuance.class);
+        doNothing().when(couponIssuance).changeStatusExpire();
+
+        // Act
+        couponIssuanceService.expireUnusedCoupon(couponIssuance);
+
+        // Assert
+        verify(couponIssuance).changeStatusExpire();
+        verify(couponIssuanceRepository).save(couponIssuance);
+    }
 }

@@ -48,4 +48,10 @@ public class CouponIssuanceService {
         return couponIssuanceRepository.findAllByUserId(userId);
     }
 
+    // 쿠폰 만료 처리
+    public void expireUnusedCoupon(CouponIssuance couponIssuance) {
+        couponIssuance.changeStatusExpire();
+        couponIssuanceRepository.save(couponIssuance);
+    }
+
 }
