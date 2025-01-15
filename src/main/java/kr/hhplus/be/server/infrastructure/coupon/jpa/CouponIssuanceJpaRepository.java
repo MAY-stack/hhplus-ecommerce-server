@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.infrastructure.coupon.jpa;
 
 import kr.hhplus.be.server.domain.coupon.entity.CouponIssuance;
+import kr.hhplus.be.server.domain.coupon.entity.IssuedCouponStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,4 +22,6 @@ public interface CouponIssuanceJpaRepository extends JpaRepository<CouponIssuanc
     List<CouponIssuance> findAllByCouponId(Long expiredCouponId);
 
     List<CouponIssuance> findAllByUserId(String userId);
+
+    List<CouponIssuance> findAllByCouponIdAndStatus(Long couponId, IssuedCouponStatus status);
 }

@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.domain.coupon.repository;
 
 import kr.hhplus.be.server.domain.coupon.entity.CouponIssuance;
+import kr.hhplus.be.server.domain.coupon.entity.IssuedCouponStatus;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,4 +16,6 @@ public interface CouponIssuanceRepository {
     Optional<CouponIssuance> findById(String id);
 
     List<CouponIssuance> findAllByUserId(String userId);
+
+    List<CouponIssuance> findByCouponIdAndStatus(Long couponId, IssuedCouponStatus status);
 }

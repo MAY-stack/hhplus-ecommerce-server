@@ -2,6 +2,7 @@ package kr.hhplus.be.server.infrastructure.coupon.repository;
 
 import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.domain.coupon.entity.CouponIssuance;
+import kr.hhplus.be.server.domain.coupon.entity.IssuedCouponStatus;
 import kr.hhplus.be.server.domain.coupon.repository.CouponIssuanceRepository;
 import kr.hhplus.be.server.infrastructure.coupon.jpa.CouponIssuanceJpaRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,5 +37,10 @@ public class CouponIssuanceRepositoryImpl implements CouponIssuanceRepository {
     @Override
     public List<CouponIssuance> findAllByUserId(String userId) {
         return couponIssuanceJpaRepository.findAllByUserId(userId);
+    }
+
+    @Override
+    public List<CouponIssuance> findByCouponIdAndStatus(Long couponId, IssuedCouponStatus status) {
+        return couponIssuanceJpaRepository.findAllByCouponIdAndStatus(couponId, status);
     }
 }

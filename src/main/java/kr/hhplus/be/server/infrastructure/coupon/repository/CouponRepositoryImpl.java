@@ -37,8 +37,8 @@ public class CouponRepositoryImpl implements CouponRepository {
     }
 
     @Override
-    public List<Coupon> findByExpirationDateBefore(LocalDate currentDate) {
-        return couponJpaRepository.findByExpirationDateBefore(currentDate);
+    public List<Coupon> findAllByExpirationDate(LocalDate currentDate) {
+        return couponJpaRepository.findAllByExpirationDate(currentDate);
     }
 
 }
