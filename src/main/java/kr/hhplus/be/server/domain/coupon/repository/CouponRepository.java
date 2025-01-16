@@ -23,5 +23,5 @@ public interface CouponRepository {
 
     Coupon save(Coupon coupon);
 
-    List<Coupon> findByExpirationDateBefore(LocalDate currentDate);
+    List<Coupon> findAllByExpirationDate(LocalDate currentDate);
 }

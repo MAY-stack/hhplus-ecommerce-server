@@ -1,11 +1,14 @@
 package kr.hhplus.be.server.domain.order.entity;
 
 import jakarta.persistence.*;
-import kr.hhplus.be.server.domain.product.entity.Product;
+import kr.hhplus.be.server.common.exception.ErrorMessage;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -35,13 +38,30 @@ public class OrderDetail {
     @Column(nullable = false)
     private Long subTotal;
 
-    public OrderDetail(Long orderId, Product product, Integer quantity) {
-        this.orderId = orderId;
-        this.productId = product.getId();
-        this.productName = product.getName();
-        this.quantity = quantity;
-        this.unitPrice = product.getPrice();
-        this.subTotal = quantity * product.getPrice();
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
+    public OrderDetail(Long orderId, Long productId, String productName, Long unitPrice, Integer quantity) {
+        if (orderId == null) {
+            throw new IllegalArgumentException(ErrorMessage.ORDER_ID_REQUIRED.getMessage());
+        }
+        if (productId == null) {
+            throw new IllegalArgumentException(ErrorMessage.PRODUCT_ID_REQUIRED.getMessage());
+        }
+        if (productName == null || productName.isBlank()) {
+            throw new IllegalArgumentException(ErrorMessage.PRODUCT_NAME_REQUIRED.getMessage());
+        }
+        if (unitPrice == null || unitPrice <= 0) {
+            throw new IllegalArgumentException(ErrorMessage.MINIMUM_PRODUCT_PRICE_VIOLATION.getMessage());
+        }
+        if (quantity == null || quantity <= 0) {
+            throw new IllegalArgumentException(ErrorMessage.MINIMUM_ORDER_QUANTITY_VIOLATION.getMessage());
+        }
+        this.orderId = orderId;
+        this.productId = productId;
+        this.productName = productName;
+        this.quantity = quantity;
+        this.unitPrice = unitPrice;
+        this.subTotal = quantity * unitPrice;
     }
 }

@@ -28,11 +28,11 @@ public class TopSellingProductResponse {
 
     public static TopSellingProductResponse fromProductSalesDto(ProductSalesDto productSalesDto) {
         return new TopSellingProductResponse(
-                productSalesDto.getProductId(),
-                productSalesDto.getProductName(),
-                productSalesDto.getPrice(),
-                productSalesDto.getStock(),
-                productSalesDto.getSoldQuantity()
+                productSalesDto.productId(),
+                productSalesDto.productName(),
+                productSalesDto.price(),
+                productSalesDto.stock(),
+                productSalesDto.soldQuantity()
         );
     }
 }

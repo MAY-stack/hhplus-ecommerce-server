@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.domain.point.entity;
 
 import jakarta.persistence.*;
+import kr.hhplus.be.server.common.exception.ErrorMessage;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,54 +31,45 @@ public class Point {
     private LocalDateTime updatedAt;
 
     // 사용자 ID로 Point 생성 (초기 잔액 0)
-    public Point(String userId) {
-        if (userId == null || userId.trim().isEmpty()) {
-            throw new IllegalArgumentException("사용자 아이디는 필수입니다.");
+    public Point(String userId, Long initialBalance) {
+        if (userId == null || userId.isBlank()) {
+            throw new IllegalArgumentException(ErrorMessage.USER_ID_REQUIRED.getMessage());
+        }
+        if (initialBalance < 0) {
+            throw new IllegalArgumentException(ErrorMessage.INITIAL_BALANCE_NEGATIVE.getMessage());
         }
         this.userId = userId;
-    }
-
-    // 사용자 ID와 초기 잔액으로 Point 생성
-    public Point(String userId, Long balance) {
-        if (userId == null || userId.trim().isEmpty()) {
-            throw new IllegalArgumentException("사용자 아이디는 필수입니다.");
-        }
-        if (balance == null || balance < 0) {
-            throw new IllegalArgumentException("초기 잔액은 0 이상이어야 합니다. 입력된 값: " + balance);
-        }
-        this.userId = userId;
-        this.balance = balance;
+        this.balance = initialBalance;
     }
 
     // 포인트 충전
-    public void addPoints(Long amount) {
-        if (amount == null || amount <= 0) {
-            throw new IllegalArgumentException("충전 금액은 0보다 커야 합니다. 입력된 값: " + amount);
+    public Long addPoints(Long amount) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException(ErrorMessage.MINIMUM_RECHARGE_POINTS_VIOLATION.getMessage());
         }
         if (amount > MAX_SINGLE_RECHARGE) {
-            throw new IllegalArgumentException(
-                    "1회 최대 충전 금액은 " + MAX_SINGLE_RECHARGE + " 포인트를 초과할 수 없습니다. 입력된 값: " + amount
-            );
+            throw new IllegalArgumentException(ErrorMessage.MAXIMUM_RECHARGE_POINTS_VIOLATION.getMessage());
         }
-        if (balance + amount > MAX_BALANCE) {
-            throw new IllegalArgumentException(
-                    "최대 보유 잔고는 " + MAX_BALANCE + " 포인트 미만입니다. 현재 잔고: " + balance + ", 입력된 충전 금액: " + amount
-            );
+        if (this.balance + amount > MAX_BALANCE) {
+            throw new IllegalArgumentException(ErrorMessage.BALANCE_EXCEEDS_LIMIT.getMessage());
         }
         this.balance += amount;
+        return this.balance;
     }
 
-    // 포인트 사용 메서드
-    public void usePoints(Long amount) {
+    // 포인트 사용
+    public Long usePoints(Long amount) {
         if (amount == null || amount <= 0) {
-            throw new IllegalArgumentException("사용 금액은 0보다 커야 합니다. 입력된 값: " + amount);
+            throw new IllegalArgumentException(ErrorMessage.MAXIMUM_USAGE_POINTS_VIOLATION.getMessage());
         }
-        if (amount > balance) {
-            throw new IllegalArgumentException(
-                    "잔액이 부족합니다. 현재 잔고: " + balance + ", 입력된 사용 금액: " + amount
-            );
+        if (amount > MAX_BALANCE) {
+            throw new IllegalArgumentException(ErrorMessage.MINIMUM_USAGE_POINTS_VIOLATION.getMessage());
+        }
+        if (this.balance < amount) {
+            throw new IllegalArgumentException(ErrorMessage.INSUFFICIENT_POINT_BALANCE.getMessage());
         }
         this.balance -= amount;
+        return this.balance;
     }
 
 }

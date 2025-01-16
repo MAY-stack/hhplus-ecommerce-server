@@ -2,6 +2,7 @@ package kr.hhplus.be.server.interfaces.order.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import kr.hhplus.be.server.application.order.facade.OrderFacade;
 import kr.hhplus.be.server.interfaces.order.dto.OrderRequest;
 import kr.hhplus.be.server.interfaces.order.dto.OrderResponse;
@@ -21,8 +22,8 @@ public class OrderController {
 
     @Operation(summary = "주문 요청 API")
     @PostMapping
-    public ResponseEntity<OrderResponse> postOrder(@RequestBody OrderRequest orderRequest) {
-        OrderResponse orderResponse = OrderResponse.fromDto(orderFacade.makeOrder(orderRequest.toOrderDto()));
+    public ResponseEntity<OrderResponse> postOrder(@Valid @RequestBody OrderRequest orderRequest) {
+        OrderResponse orderResponse = OrderResponse.fromDto(orderFacade.makeOrderAndProcessPayment(orderRequest.toOrderDto()));
         return ResponseEntity.ok(orderResponse);
     }
 }

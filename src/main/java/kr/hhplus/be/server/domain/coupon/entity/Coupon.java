@@ -1,8 +1,7 @@
 package kr.hhplus.be.server.domain.coupon.entity;
 
 import jakarta.persistence.*;
-import kr.hhplus.be.server.domain.coupon.exception.CouponExpiredException;
-import kr.hhplus.be.server.domain.coupon.exception.CouponSoldOutException;
+import kr.hhplus.be.server.common.exception.ErrorMessage;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -36,20 +35,23 @@ public class Coupon {
     private LocalDate expirationDate;
 
     public Coupon(String title, Long discountAmount, Long minimumOrderAmount, Integer totalQuantity, LocalDate expirationDate) {
-        if (title == null || title.trim().isEmpty()) {
-            throw new IllegalArgumentException("쿠폰명은 필수입니다.");
+        if (title == null || title.isBlank()) {
+            throw new IllegalArgumentException(ErrorMessage.COUPON_TITLE_REQUIRED.getMessage());
         }
         if (discountAmount <= 0) {
-            throw new IllegalArgumentException("할인금액은 0보다 커야합니다.");
+            throw new IllegalArgumentException(ErrorMessage.MINIMUM_DISCOUNT_AMOUNT_VIOLATION.getMessage());
         }
         if (minimumOrderAmount <= 0) {
-            throw new IllegalArgumentException("최소주문금액은 0보다 커야합니다.");
+            throw new IllegalArgumentException(ErrorMessage.MINIMUM_ORDER_AMOUNT_VIOLATION.getMessage());
         }
         if (totalQuantity <= 0) {
-            throw new IllegalArgumentException("쿠폰의 수량은 0보다 커야합니다.");
+            throw new IllegalArgumentException(ErrorMessage.MINIMUM_COUPON_QUANTITY_VIOLATION.getMessage());
+        }
+        if (expirationDate == null) { // null 검증 추가
+            throw new NullPointerException(ErrorMessage.EXPIRATION_DATE_REQUIRE.getMessage());
         }
         if (expirationDate.isBefore(LocalDate.now())) {
-            throw new IllegalArgumentException("쿠폰의 만료일은 오늘 이후여야 합니다.");
+            throw new IllegalArgumentException(ErrorMessage.INVALID_EXPIRATION_DATE.getMessage());
         }
         this.title = title;
         this.discountAmount = discountAmount;
@@ -61,19 +63,14 @@ public class Coupon {
 
     public void decreaseRemaining() {
         // 쿠폰 만료 확인
-        if (isExpired()) {
-            throw new CouponExpiredException();
+        if (this.expirationDate.isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException(ErrorMessage.COUPON_EXPIRED.getMessage());
         }
         // 잔여 수량 확인
-        if (getRemainingQuantity() <= 0) {
-            throw new CouponSoldOutException();
+        if (this.remainingQuantity <= 0) {
+            throw new IllegalArgumentException(ErrorMessage.COUPON_SOLD_OUT.getMessage());
         }
         this.remainingQuantity--;
-    }
-
-    // 쿠폰 만료 여부 확인
-    public boolean isExpired() {
-        return expirationDate.isBefore(LocalDate.now());
     }
 }
 

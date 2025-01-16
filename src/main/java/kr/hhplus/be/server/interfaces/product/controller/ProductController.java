@@ -7,6 +7,7 @@ import kr.hhplus.be.server.domain.product.service.ProductService;
 import kr.hhplus.be.server.interfaces.product.dto.ProductResponse;
 import kr.hhplus.be.server.interfaces.product.dto.TopSellingProductResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,8 +27,8 @@ public class ProductController {
 
     @Operation(summary = "상품 목록 조회 API", description = "상품 목록을 조회할 수 있는 API")
     @GetMapping("/api/v1/products")
-    public ResponseEntity<List<ProductResponse>> getProductList(@RequestParam(required = false) Long category) {
-        List<ProductResponse> productResponses = productService.getProductList(category).stream()
+    public ResponseEntity<List<ProductResponse>> getProductList(@RequestParam(required = false) Long category, Pageable pageable) {
+        List<ProductResponse> productResponses = productService.getProductList(category, pageable).stream()
                 .map(ProductResponse::fromEntity)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(productResponses);

@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.domain.product.entity;
 
 import jakarta.persistence.*;
+import kr.hhplus.be.server.common.exception.ErrorMessage;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,6 +20,9 @@ public class Category {
     private String name;
 
     public Category(String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException(ErrorMessage.CATEGORY_NAME_REQUIRED.getMessage());
+        }
         this.name = name;
     }
 }

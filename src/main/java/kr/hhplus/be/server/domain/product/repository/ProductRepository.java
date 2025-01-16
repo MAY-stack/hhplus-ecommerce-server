@@ -1,6 +1,8 @@
 package kr.hhplus.be.server.domain.product.repository;
 
 import kr.hhplus.be.server.domain.product.entity.Product;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,9 +18,9 @@ public interface ProductRepository {
 
     Optional<Product> findByIdWithLock(Long productId);
 
-    List<Product> findAll();
+    Page<Product> findAll(Pageable pageable);
 
-    List<Product> findAllByCategoryId(Long categoryId);
+    Page<Product> findAllByCategoryId(Long categoryId, Pageable pageable);
 
     List<Product> findAllById(List<Long> productIds);
 }
