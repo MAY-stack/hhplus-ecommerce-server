@@ -27,8 +27,6 @@ import kr.hhplus.be.server.domain.product.service.ProductService;
 import kr.hhplus.be.server.domain.user.entity.User;
 import kr.hhplus.be.server.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -110,18 +108,14 @@ public class OrderFacade {
         return OrderAndPaymentResultDto.fromEntity(order, payment);
     }
 
-    private final Logger logger = LoggerFactory.getLogger(OrderFacade.class);
-
     // 판매량 상위 5개 목록 조회
     public List<ProductSalesDto> getTopSellingProducts() {
         // Step 1: 최근 3일간 판매량 상위 제품 조회
         List<Object[]> results = orderDetailService.getTopSellingProducts(3, 5);
-        logger.info("results => {}", results);
         // Step 2: productId 리스트 추출
         List<Long> productIds = results.stream()
                 .map(row -> (Long) row[0]) // productId 추출
                 .toList();
-        logger.info("productIds => {}", productIds);
         // Step 3: ProductEntity 한 번에 조회
         Map<Long, Product> productMap = productService.getProductsByIds(productIds).stream()
                 .collect(Collectors.toMap(Product::getId, Function.identity()));
