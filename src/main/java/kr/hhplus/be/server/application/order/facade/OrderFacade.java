@@ -1,33 +1,36 @@
 package kr.hhplus.be.server.application.order.facade;
 
 import jakarta.transaction.Transactional;
+import kr.hhplus.be.server.application.external.dto.ExternalRequestDto;
+import kr.hhplus.be.server.application.external.service.ExternalDataPlatformService;
 import kr.hhplus.be.server.application.order.dto.OrderAndPaymentResultDto;
 import kr.hhplus.be.server.application.order.dto.OrderDto;
 import kr.hhplus.be.server.application.order.dto.OrderItemDto;
 import kr.hhplus.be.server.application.order.dto.ProductSalesDto;
-import kr.hhplus.be.server.application.payment.PaymentFacade;
-import kr.hhplus.be.server.domain.coupon.entity.Coupon;
 import kr.hhplus.be.server.domain.coupon.entity.CouponIssuance;
-import kr.hhplus.be.server.domain.coupon.exception.CouponExpiredException;
 import kr.hhplus.be.server.domain.coupon.service.CouponIssuanceService;
 import kr.hhplus.be.server.domain.coupon.service.CouponService;
+import kr.hhplus.be.server.domain.order.entity.Order;
 import kr.hhplus.be.server.domain.order.entity.OrderDetail;
-import kr.hhplus.be.server.domain.order.entity.Orders;
-import kr.hhplus.be.server.domain.order.repository.OrderDetailRepository;
+import kr.hhplus.be.server.domain.order.entity.OrderStatus;
 import kr.hhplus.be.server.domain.order.service.OrderDetailService;
 import kr.hhplus.be.server.domain.order.service.OrderService;
 import kr.hhplus.be.server.domain.payment.entity.Payment;
+import kr.hhplus.be.server.domain.payment.entity.PaymentStatus;
+import kr.hhplus.be.server.domain.payment.service.PaymentService;
+import kr.hhplus.be.server.domain.point.entity.Point;
+import kr.hhplus.be.server.domain.point.entity.PointHistoryType;
+import kr.hhplus.be.server.domain.point.service.PointHistoryService;
+import kr.hhplus.be.server.domain.point.service.PointService;
 import kr.hhplus.be.server.domain.product.entity.Product;
 import kr.hhplus.be.server.domain.product.service.ProductService;
-import kr.hhplus.be.server.domain.user.entity.Users;
+import kr.hhplus.be.server.domain.user.entity.User;
 import kr.hhplus.be.server.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -38,80 +41,89 @@ import java.util.stream.Collectors;
 public class OrderFacade {
     private final UserService userService;
     private final ProductService productService;
-    private final CouponIssuanceService couponIssuanceService;
     private final CouponService couponService;
+    private final CouponIssuanceService couponIssuanceService;
     private final OrderService orderService;
     private final OrderDetailService orderDetailService;
-    private final PaymentFacade paymentFacade;
-    private final OrderDetailRepository orderDetailRepository;
+    private final PaymentService paymentService;
+    private final PointService pointService;
+    private final PointHistoryService pointHistoryService;
+    private final ExternalDataPlatformService externalDataPlatformService;
 
     @Transactional
-    public OrderAndPaymentResultDto makeOrder(OrderDto orderDto) {
+    public OrderAndPaymentResultDto makeOrderAndProcessPayment(OrderDto orderDto) {
+        String couponIssuanceId = orderDto.couponIssuanceId();
+
         // 사용자 조회
-        Users user = userService.getUserById(orderDto.getUserId());
+        User user = userService.getUserById(orderDto.userId());
+        String userId = user.getId();
+
         // 주문 생성
-        Orders order = orderService.createOrder(orderDto.getUserId(), orderDto.getCouponIssuanceId());
-        List<OrderDetail> orderDetailList = new ArrayList<>();
-        for (OrderItemDto orderProduct : orderDto.getOrderItemDtoList()) {
+        Order order = orderService.createOrder(userId, couponIssuanceId);
+
+        // 주문 상세 정보 생성
+        for (OrderItemDto orderProduct : orderDto.orderItemDtoList()) {
             // 재고 확인 및 감량
-            Product product = productService.validateStockAndReduceQuantityWithLock(orderProduct.getProductId(), orderProduct.getQuantity());
+            Product product = productService.validateStockAndReduceQuantityWithLock(orderProduct.productId(), orderProduct.quantity());
+
             // orderDetail 생성
-
-            OrderDetail orderDetail = new OrderDetail(order.getId(), product, orderProduct.getQuantity());
-
-            orderDetailList.add(orderDetail);
+            OrderDetail orderDetail = orderDetailService.createOrderDetail(order.getId(), product, orderProduct.quantity());
 
             // 총 주문 금액 추가
-            order.addOrderAmount(orderDetail.getSubTotal());
+            orderService.addOrderAmount(order, orderDetail.getSubTotal());
         }
-        orderService.save(order);
-        orderDetailService.saveAll(orderDetailList);
+        // 할인전 최종 금액 설정
+        Long finalAmount = order.getTotalAmount();
 
         // 쿠폰 적용
-        if (orderDto.getCouponIssuanceId() != null) {
-            applyCouponToOrder(order, orderDto.getCouponIssuanceId());
+        if (couponIssuanceId != null) {
+            CouponIssuance couponIssuance = couponIssuanceService.getCouponIssuanceById(couponIssuanceId);
+            // 쿠폰 적용 금액 계산
+            finalAmount = couponService.applyCoupon(order.getTotalAmount(), couponIssuance.getCouponId());
+            // 사용자 확인 및 쿠폰 사용 처리
+            couponIssuance = couponIssuanceService.useIssuedCoupon(couponIssuance, userId);
         }
+
+        // 최종 금액 설정
+        orderService.updateFinalAmount(order, finalAmount);
+        orderService.updateStatus(order, OrderStatus.PENDING_PAYMENT);
+
         //결제
-        Payment payment = paymentFacade.processPayment(order);
+        Payment payment;
+        try {
+            // 포인트 차감 처리, 차감 기록
+            Point point = pointService.deductPoint(userId, finalAmount);
+            pointHistoryService.createPointHistory(point.getId(), PointHistoryType.DEDUCT, finalAmount);
+
+            // 결제 성공 처리
+            payment = paymentService.createPayment(order.getId(), finalAmount, PaymentStatus.COMPLETED);
+            order = orderService.updateStatus(order, OrderStatus.COMPLETED);
+
+            // 외부 플랫폼 데이터 전송
+            externalDataPlatformService.sendData(new ExternalRequestDto(order));
+        } catch (Exception e) {
+            payment = paymentService.createPayment(order.getId(), finalAmount, PaymentStatus.FAILED);
+            order = orderService.updateStatus(order, OrderStatus.PAYMENT_FAILED);
+            throw e;
+        }
 
         return OrderAndPaymentResultDto.fromEntity(order, payment);
     }
 
-    // 쿠폰 적용
-    private void applyCouponToOrder(Orders order, String couponIssuanceId) {
-        CouponIssuance couponIssuance = couponIssuanceService.getById(couponIssuanceId);
-        Coupon coupon = couponService.getCouponById(couponIssuance.getCouponId());
-
-        if (!order.getUserId().equals(couponIssuance.getUserId())) {
-            throw new IllegalArgumentException("본인이 발급한 쿠폰만 사용할 수 있습니다.");
-        }
-        if (order.getTotalAmount() < coupon.getMinimumOrderAmount()) {
-            throw new IllegalArgumentException("쿠폰을 적용할 수 있는 최소 주문금액 이하입니다.");
-        }
-        if (coupon.isExpired()) {
-            throw new CouponExpiredException();
-        }
-
-        order.applyCoupon(coupon.getDiscountAmount());
-        couponIssuance.changeStatusToUsed();
-        couponIssuanceService.save(couponIssuance); // 쿠폰 상태 업데이트
-    }
+    private final Logger logger = LoggerFactory.getLogger(OrderFacade.class);
 
     // 판매량 상위 5개 목록 조회
     public List<ProductSalesDto> getTopSellingProducts() {
-        LocalDateTime startDate = LocalDateTime.now().minusDays(3);
-        Pageable pageable = PageRequest.of(0, 5);
-
         // Step 1: 최근 3일간 판매량 상위 제품 조회
-        List<Object[]> results = orderDetailRepository.findTopSellingProducts(startDate, pageable);
-
+        List<Object[]> results = orderDetailService.getTopSellingProducts(3, 5);
+        logger.info("results => {}", results);
         // Step 2: productId 리스트 추출
         List<Long> productIds = results.stream()
                 .map(row -> (Long) row[0]) // productId 추출
                 .toList();
-
+        logger.info("productIds => {}", productIds);
         // Step 3: ProductEntity 한 번에 조회
-        Map<Long, Product> productMap = productService.findAllById(productIds).stream()
+        Map<Long, Product> productMap = productService.getProductsByIds(productIds).stream()
                 .collect(Collectors.toMap(Product::getId, Function.identity()));
 
         // Step 4: ProductSalesResponse 생성 및 반환
