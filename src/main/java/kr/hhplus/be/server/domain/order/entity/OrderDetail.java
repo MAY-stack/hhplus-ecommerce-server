@@ -6,6 +6,9 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -34,6 +37,9 @@ public class OrderDetail {
 
     @Column(nullable = false)
     private Long subTotal;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
     public OrderDetail(Long orderId, Long productId, String productName, Long unitPrice, Integer quantity) {
         if (orderId == null) {
