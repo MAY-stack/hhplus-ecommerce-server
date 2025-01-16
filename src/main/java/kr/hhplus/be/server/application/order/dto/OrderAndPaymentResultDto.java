@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.application.order.dto;
 
+import kr.hhplus.be.server.domain.order.entity.Order;
 import kr.hhplus.be.server.domain.order.entity.OrderStatus;
-import kr.hhplus.be.server.domain.order.entity.Orders;
 import kr.hhplus.be.server.domain.payment.entity.Payment;
 import kr.hhplus.be.server.domain.payment.entity.PaymentStatus;
 import lombok.Builder;
@@ -22,7 +22,7 @@ public class OrderAndPaymentResultDto {
     private final LocalDateTime paidAt;
     private final PaymentStatus paymentStatus;
 
-    public static OrderAndPaymentResultDto fromEntity(Orders order, Payment payment) {
+    public static OrderAndPaymentResultDto fromEntity(Order order, Payment payment) {
         return new OrderAndPaymentResultDto(
                 order.getId(),
                 order.getUserId(),
