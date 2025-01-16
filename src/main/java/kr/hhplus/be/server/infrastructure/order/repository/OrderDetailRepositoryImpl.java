@@ -19,9 +19,9 @@ public class OrderDetailRepositoryImpl implements OrderDetailRepository {
     public OrderDetail save(OrderDetail orderDetail) {
         return orderDetailJpaRepository.save(orderDetail);
     }
-    
+
     @Override
     public List<Object[]> findTopSellingProducts(LocalDateTime startDate, Pageable pageable) {
-        return orderDetailJpaRepository.findTopSellingProducts(startDate, pageable);
+        return orderDetailJpaRepository.findTopSellingProductsByDate(startDate, pageable);
     }
 }

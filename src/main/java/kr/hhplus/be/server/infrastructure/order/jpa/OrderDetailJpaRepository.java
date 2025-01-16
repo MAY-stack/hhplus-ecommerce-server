@@ -11,12 +11,11 @@ import java.util.List;
 
 public interface OrderDetailJpaRepository extends JpaRepository<OrderDetail, Long> {
     @Query("""
-                SELECT od.productId AS productId, SUM(od.quantity) AS totalQuantity
-                FROM OrderDetail od
-                JOIN Order o ON od.orderId = o.id
-                WHERE o.createdAt >= :startDate
-                GROUP BY od.productId
-                ORDER BY totalQuantity DESC
+            SELECT od.productId AS productId, SUM(od.quantity) AS totalQuantity
+            FROM OrderDetail od
+            WHERE od.createdAt >= :startDate
+            GROUP BY od.productId
+            ORDER BY totalQuantity DESC
             """)
-    List<Object[]> findTopSellingProducts(@Param("startDate") LocalDateTime startDate, Pageable pageable);
+    List<Object[]> findTopSellingProductsByDate(@Param("startDate") LocalDateTime startDate, Pageable pageable);
 }
