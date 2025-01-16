@@ -2,7 +2,7 @@ package kr.hhplus.be.server.application.user;
 
 
 import kr.hhplus.be.server.domain.point.service.PointService;
-import kr.hhplus.be.server.domain.user.entity.Users;
+import kr.hhplus.be.server.domain.user.entity.User;
 import kr.hhplus.be.server.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,13 +16,14 @@ public class UserFacade {
 
     // 사용자 생성
     @Transactional
-    public Users createUser(String userId, String userName) {
+    public User createUser(String userId, String userName) {
+
         // 사용자 생성
-        Users users = userService.createUser(userId, userName);
+        User user = userService.createUser(userId, userName);
 
         // 포인트 생성
         pointService.createPoint(userId);
 
-        return users;
+        return user;
     }
 }
