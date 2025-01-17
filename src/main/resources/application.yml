@@ -12,15 +12,16 @@ spring:
       max-lifetime: 60000
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
-    open-in-view: false
-    generate-ddl: false
-    show-sql: false
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: none
     properties:
-      hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
-      hibernate.timezone.default_storage: NORMALIZE_UTC
-      hibernate.jdbc.time_zone: UTC
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        timezone.default_storage: NORMALIZE_UTC
+        jdbc.time_zone: UTC
+  sql:
+    init:
+      mode: always
 
 ---
 spring.config.activate.on-profile: local, test
