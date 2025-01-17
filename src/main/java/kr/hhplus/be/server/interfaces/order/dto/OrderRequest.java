@@ -7,22 +7,24 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import kr.hhplus.be.server.application.order.dto.OrderDto;
 import kr.hhplus.be.server.application.order.dto.OrderItemDto;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Getter
+@Setter
 @Schema(description = "주문 생성 요청 데이터 구조")
-@NoArgsConstructor
 public class OrderRequest {
 
-    @NotBlank
+    @NotBlank(message = "사용자 아이디는 필수입니다.")
     @Schema(description = "주문하는 사용자 ID", example = "user123", requiredMode = Schema.RequiredMode.REQUIRED)
     private String userId;
 
-    @NotNull
-    @Schema(description = "주문 상품 리스트", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotNull(message = "주문 상품 리스트는 필수입니다.")
     @Valid
+    @Schema(description = "주문 상품 리스트", requiredMode = Schema.RequiredMode.REQUIRED)
     private List<OrderItem> orderItemList;
 
     @Schema(description = "적용할 쿠폰 ID", example = "550e8400-e29b-41d4-a716-446655440000")
