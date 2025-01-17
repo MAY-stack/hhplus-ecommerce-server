@@ -46,7 +46,7 @@ class PointControllerTest {
         // Given
         String userId = "user123";
         Point mockPoint = new Point(userId, 50000L);
-        PointResponse mockResponse = PointResponse.fromEntity(mockPoint);
+        PointResponse mockResponse = PointResponse.from(mockPoint);
 
         when(pointService.getPointByUserId(userId)).thenReturn(mockPoint);
 
@@ -66,7 +66,7 @@ class PointControllerTest {
         request.setAmount(rechargeAmount);
 
         Point mockPoint = new Point(userId, 80000L);
-        PointResponse mockResponse = PointResponse.fromEntity(mockPoint);
+        PointResponse mockResponse = PointResponse.from(mockPoint);
 
         when(pointFacade.rechargePointWithHistory(eq(userId), eq(rechargeAmount))).thenReturn(mockPoint);
 

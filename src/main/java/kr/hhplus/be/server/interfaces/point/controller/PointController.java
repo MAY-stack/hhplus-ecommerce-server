@@ -29,7 +29,7 @@ public class PointController {
     public ResponseEntity<PointResponse> getPoints(
             @Parameter(required = true, description = "사용자 ID", example = "user1")
             @PathVariable @NotBlank String userId) {
-        PointResponse pointResponse = PointResponse.fromEntity(pointService.getPointByUserId(userId));
+        PointResponse pointResponse = PointResponse.from(pointService.getPointByUserId(userId));
         return ResponseEntity.ok(pointResponse);
     }
 
@@ -40,7 +40,7 @@ public class PointController {
             @PathVariable String userId,
 
             @Valid @RequestBody PointRechargeRequest request) {
-        PointResponse pointResponse = PointResponse.fromEntity(pointFacade.rechargePointWithHistory(userId, request.getAmount()));
+        PointResponse pointResponse = PointResponse.from(pointFacade.rechargePointWithHistory(userId, request.amount()));
         return ResponseEntity.ok(pointResponse);
     }
 }

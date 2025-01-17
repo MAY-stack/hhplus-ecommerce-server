@@ -3,7 +3,7 @@ package kr.hhplus.be.server.interfaces.copon.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.hhplus.be.server.application.coupon.facade.CouponFacade;
 import kr.hhplus.be.server.domain.coupon.entity.IssuedCouponStatus;
-import kr.hhplus.be.server.interfaces.copon.dto.CouponInfo;
+import kr.hhplus.be.server.interfaces.copon.dto.CouponInfoResponse;
 import kr.hhplus.be.server.interfaces.copon.dto.CouponIssueRequest;
 import kr.hhplus.be.server.interfaces.copon.dto.CouponIssueResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,9 +49,9 @@ class CouponControllerTest {
     void 발급된_쿠폰_조회_API_테스트() throws Exception {
         // Given
         String userId = "user123";
-        List<CouponInfo> mockCouponList = List.of(
-                new CouponInfo(UUID.randomUUID().toString(), 1L, "할인 쿠폰", 1000L, 3000L, LocalDateTime.now().plusDays(7).toString(), IssuedCouponStatus.ISSUED.toString()),
-                new CouponInfo(UUID.randomUUID().toString(), 2L, "무료 배송 쿠폰", 0L, 2000L, LocalDateTime.now().plusDays(7).toString(), IssuedCouponStatus.ISSUED.toString())
+        List<CouponInfoResponse> mockCouponList = List.of(
+                new CouponInfoResponse(UUID.randomUUID().toString(), 1L, "할인 쿠폰", 1000L, 3000L, LocalDateTime.now().plusDays(7).toString(), IssuedCouponStatus.ISSUED.toString()),
+                new CouponInfoResponse(UUID.randomUUID().toString(), 2L, "무료 배송 쿠폰", 0L, 2000L, LocalDateTime.now().plusDays(7).toString(), IssuedCouponStatus.ISSUED.toString())
         );
 
         when(couponFacade.getIssuedCouponList(userId)).thenReturn(mockCouponList);

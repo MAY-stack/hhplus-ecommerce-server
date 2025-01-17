@@ -98,14 +98,14 @@ public class OrderFacade {
             order = orderService.updateStatus(order, OrderStatus.COMPLETED);
 
             // 외부 플랫폼 데이터 전송
-            externalDataPlatformService.sendData(new ExternalRequestDto(order));
+            externalDataPlatformService.sendData(ExternalRequestDto.from(order));
         } catch (Exception e) {
             payment = paymentService.createPayment(order.getId(), finalAmount, PaymentStatus.FAILED);
             order = orderService.updateStatus(order, OrderStatus.PAYMENT_FAILED);
             throw e;
         }
 
-        return OrderAndPaymentResultDto.fromEntity(order, payment);
+        return OrderAndPaymentResultDto.from(order, payment);
     }
 
     // 판매량 상위 5개 목록 조회

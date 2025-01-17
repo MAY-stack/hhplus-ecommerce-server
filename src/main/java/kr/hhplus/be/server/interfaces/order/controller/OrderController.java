@@ -23,7 +23,7 @@ public class OrderController {
     @Operation(summary = "주문 생성 및 결제 요청 API")
     @PostMapping
     public ResponseEntity<OrderResponse> postOrder(@Valid @RequestBody OrderRequest orderRequest) {
-        OrderResponse orderResponse = OrderResponse.fromDto(orderFacade.makeOrderAndProcessPayment(orderRequest.toOrderDto()));
+        OrderResponse orderResponse = OrderResponse.from(orderFacade.makeOrderAndProcessPayment(orderRequest.toDto()));
         return ResponseEntity.ok(orderResponse);
     }
 }

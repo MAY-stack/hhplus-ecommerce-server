@@ -9,9 +9,9 @@ public class ExternalDataPlatformService {
     public boolean sendData(ExternalRequestDto requestDto) {
         // 실제 외부 서비스 전송 로직 대신 무조건 true 반환
         System.out.println("External data sent:");
-        System.out.println("User ID: " + requestDto.getUserId());
-        System.out.println("Order ID: " + requestDto.getOrderId());
-        System.out.println("Amount: " + requestDto.getAmount());
+        System.out.println("User ID: " + requestDto.userId());
+        System.out.println("Order ID: " + requestDto.orderId());
+        System.out.println("Amount: " + requestDto.amount());
 
         // 외부 통신 성공 여부 (임의로 true 반환)
         return true;
