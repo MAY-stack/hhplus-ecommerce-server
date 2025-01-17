@@ -3,17 +3,20 @@ package kr.hhplus.be.server.interfaces.point.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import kr.hhplus.be.server.application.point.PointFacade;
 import kr.hhplus.be.server.domain.point.service.PointService;
 import kr.hhplus.be.server.interfaces.point.dto.PointRechargeRequest;
 import kr.hhplus.be.server.interfaces.point.dto.PointResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "point", description = "포인트 API")
+@Validated
 @RestController
-@RequestMapping("/api/v1/points")
+@RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 public class PointController {
 
@@ -21,18 +24,16 @@ public class PointController {
     private final PointService pointService;
 
     @Operation(summary = "포인트 조회 API")
-    @GetMapping
-    public ResponseEntity<PointResponse> getPoints(@Valid @RequestParam String userId) {
+    @GetMapping("/{userId}/points")
+    public ResponseEntity<PointResponse> getPoints(@PathVariable @NotBlank String userId) {
         PointResponse pointResponse = PointResponse.fromEntity(pointService.getPointByUserId(userId));
         return ResponseEntity.ok(pointResponse);
     }
 
     @Operation(summary = "포인트 충전 API")
-    @PatchMapping("/recharge")
-    public ResponseEntity<PointResponse> rechargePoints(@Valid @RequestBody PointRechargeRequest request) {
-        PointResponse pointResponse =
-                PointResponse
-                        .fromEntity(pointFacade.rechargePointWithHistory(request.getUserId(), request.getAmount()));
+    @PatchMapping("/{userId}/points")
+    public ResponseEntity<PointResponse> rechargePoints(@PathVariable String userId, @Valid @RequestBody PointRechargeRequest request) {
+        PointResponse pointResponse = PointResponse.fromEntity(pointFacade.rechargePointWithHistory(userId, request.getAmount()));
         return ResponseEntity.ok(pointResponse);
     }
 }

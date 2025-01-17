@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController {
     private final OrderFacade orderFacade;
 
-    @Operation(summary = "주문 요청 API")
+    @Operation(summary = "주문 생성 및 결제 요청 API")
     @PostMapping
     public ResponseEntity<OrderResponse> postOrder(@Valid @RequestBody OrderRequest orderRequest) {
         OrderResponse orderResponse = OrderResponse.fromDto(orderFacade.makeOrderAndProcessPayment(orderRequest.toOrderDto()));

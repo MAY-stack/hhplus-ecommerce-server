@@ -5,11 +5,13 @@ import kr.hhplus.be.server.application.order.dto.OrderAndPaymentResultDto;
 import kr.hhplus.be.server.domain.order.entity.OrderStatus;
 import kr.hhplus.be.server.domain.payment.entity.PaymentStatus;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @Schema(description = "주문 생성 응답 데이터 구조")
 public class OrderResponse {
