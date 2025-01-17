@@ -34,7 +34,7 @@ public class ProductController {
             @RequestParam(required = false) Long category,
             @ParameterObject Pageable pageable) {
         List<ProductResponse> productResponses = productService.getProductList(category, pageable).stream()
-                .map(ProductResponse::fromEntity)
+                .map(ProductResponse::from)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(productResponses);
     }
@@ -43,7 +43,7 @@ public class ProductController {
     @GetMapping("/popular")
     public ResponseEntity<List<TopSellingProductResponse>> getPopularProductList() {
         List<TopSellingProductResponse> topSellingProductResponse = orderFacade.getTopSellingProducts().stream()
-                .map(TopSellingProductResponse::fromProductSalesDto)
+                .map(TopSellingProductResponse::from)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(topSellingProductResponse);
     }

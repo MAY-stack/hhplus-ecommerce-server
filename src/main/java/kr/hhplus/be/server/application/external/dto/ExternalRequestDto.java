@@ -1,19 +1,19 @@
 package kr.hhplus.be.server.application.external.dto;
 
 import kr.hhplus.be.server.domain.order.entity.Order;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Builder;
 
-@Getter
-@NoArgsConstructor
-public class ExternalRequestDto {
-    private String userId;
-    private Long orderId;
-    private Long amount;
-
-    public ExternalRequestDto(Order order) {
-        this.userId = order.getUserId();
-        this.orderId = order.getId();
-        this.amount = order.getFinalAmount();
+@Builder
+public record ExternalRequestDto(
+        String userId,
+        Long orderId,
+        Long amount
+) {
+    public static ExternalRequestDto from(Order order) {
+        return ExternalRequestDto.builder()
+                .userId(order.getUserId())
+                .orderId(order.getId())
+                .amount(order.getTotalAmount())
+                .build();
     }
 }

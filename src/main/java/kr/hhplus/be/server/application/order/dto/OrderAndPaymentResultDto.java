@@ -5,34 +5,33 @@ import kr.hhplus.be.server.domain.order.entity.OrderStatus;
 import kr.hhplus.be.server.domain.payment.entity.Payment;
 import kr.hhplus.be.server.domain.payment.entity.PaymentStatus;
 import lombok.Builder;
-import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-@Getter
 @Builder
-public class OrderAndPaymentResultDto {
-    private final Long orderId;
-    private final String userId;
-    private final Long totalAmount;
-    private final Long discountAmount;
-    private final Long finalAmount;
-    private final String couponIssuanceId;
-    private final OrderStatus orderStatus;
-    private final LocalDateTime paidAt;
-    private final PaymentStatus paymentStatus;
+public record OrderAndPaymentResultDto(
+        Long orderId,
+        String userId,
+        Long totalAmount,
+        Long discountAmount,
+        Long finalAmount,
+        String couponIssuanceId,
+        OrderStatus orderStatus,
+        LocalDateTime paidAt,
+        PaymentStatus paymentStatus
+) {
 
-    public static OrderAndPaymentResultDto fromEntity(Order order, Payment payment) {
-        return new OrderAndPaymentResultDto(
-                order.getId(),
-                order.getUserId(),
-                order.getTotalAmount(),
-                order.getDiscountAmount(),
-                order.getFinalAmount(),
-                order.getCouponIssuanceId(),
-                order.getStatus(),
-                payment.getPaidAt(),
-                payment.getStatus()
-        );
+    public static OrderAndPaymentResultDto from(Order order, Payment payment) {
+        return OrderAndPaymentResultDto.builder()
+                .orderId(order.getId())
+                .userId(order.getUserId())
+                .totalAmount(order.getTotalAmount())
+                .discountAmount(order.getDiscountAmount())
+                .finalAmount(order.getFinalAmount())
+                .couponIssuanceId(order.getCouponIssuanceId())
+                .orderStatus(order.getStatus())
+                .paidAt(payment.getPaidAt())
+                .paymentStatus(payment.getStatus())
+                .build();
     }
 }

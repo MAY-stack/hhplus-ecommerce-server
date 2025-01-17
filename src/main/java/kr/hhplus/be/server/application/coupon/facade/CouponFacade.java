@@ -34,7 +34,7 @@ public class CouponFacade {
         CouponIssuance couponIssuance = couponIssuanceService.issueCoupon(coupon.getId(), user.getId());
 
         // 발급한 쿠폰, 쿠폰 객체 -> DTO
-        return CouponIssuanceInfoDto.fromEntity(couponIssuance, coupon);
+        return CouponIssuanceInfoDto.from(couponIssuance, coupon);
     }
 
     // 보유 쿠폰 목록 조회
@@ -45,7 +45,7 @@ public class CouponFacade {
         return couponIssuanceList.stream()
                 .map(couponIssuance -> {
                     Coupon coupon = couponService.getCouponById(couponIssuance.getCouponId());
-                    return CouponIssuanceInfoDto.fromEntity(couponIssuance, coupon);
+                    return CouponIssuanceInfoDto.from(couponIssuance, coupon);
                 })
                 .toList();
     }
