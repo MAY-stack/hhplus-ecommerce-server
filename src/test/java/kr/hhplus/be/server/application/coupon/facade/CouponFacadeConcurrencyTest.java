@@ -59,7 +59,7 @@ class CouponFacadeConcurrencyTest {
     }
 
     @Test
-    void 동시_쿠폰_발급_테스트() throws InterruptedException {
+    void 쿠폰_발급_동시성_테스트() throws InterruptedException {
         ExecutorService executorService = Executors.newFixedThreadPool(THREAD_COUNT);
         List<Future<String>> results = new ArrayList<>();
 
