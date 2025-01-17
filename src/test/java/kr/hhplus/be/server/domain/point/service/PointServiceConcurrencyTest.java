@@ -47,7 +47,7 @@ class PointServiceConcurrencyTest {
     }
 
     @Test
-    void 동시_포인트_차감_테스트() throws InterruptedException {
+    void 포인트_차감_동시성_테스트() throws InterruptedException {
         ExecutorService executorService = Executors.newFixedThreadPool(THREAD_COUNT);
         List<Future<String>> results = new ArrayList<>();
 
