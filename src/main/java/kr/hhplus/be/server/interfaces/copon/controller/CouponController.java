@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.interfaces.copon.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -26,7 +27,9 @@ public class CouponController {
 
     @Operation(summary = "발급된 쿠폰 조회 API", description = "사용자 ID로 발급된 쿠폰 목록을 조회")
     @GetMapping("/{userId}/coupons")
-    public ResponseEntity<List<CouponInfo>> getIssuedCoupons(@PathVariable @NotBlank String userId) {
+    public ResponseEntity<List<CouponInfo>> getIssuedCoupons(
+            @Parameter(required = true, description = "사용자 ID", example = "user1")
+            @PathVariable @NotBlank String userId) {
         List<CouponInfo> couponInfoList = couponFacade.getIssuedCouponList(userId).stream()
                 .map(CouponInfo::fromCouponIssuanceInfoDto)
                 .toList();
@@ -35,8 +38,11 @@ public class CouponController {
 
     @Operation(summary = "선착순 쿠폰 발급 API", description = "사용자 ID와 쿠폰 ID를 통해 선착순으로 쿠폰을 발급")
     @PostMapping("/{userId}/coupons/issuance")
-    public ResponseEntity<CouponIssueResponse> issueCoupon(@PathVariable @NotBlank String userId,
-                                                           @Valid @RequestBody CouponIssueRequest request) {
+    public ResponseEntity<CouponIssueResponse> issueCoupon(
+            @Parameter(required = true, description = "사용자 ID", example = "user1")
+            @PathVariable @NotBlank String userId,
+
+            @Valid @RequestBody CouponIssueRequest request) {
         CouponIssueResponse couponIssueResponse =
                 CouponIssueResponse.fromCouponIssuanceInfoDto(couponFacade.issueCoupon(request.getCouponId(), userId));
         return ResponseEntity.ok(couponIssueResponse);

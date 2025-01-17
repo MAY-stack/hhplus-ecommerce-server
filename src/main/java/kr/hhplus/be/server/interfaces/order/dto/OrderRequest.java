@@ -2,6 +2,7 @@ package kr.hhplus.be.server.interfaces.order.dto;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 public class OrderRequest {
 
     @NotBlank(message = "사용자 아이디는 필수입니다.")
-    @Schema(description = "주문하는 사용자 ID", example = "user123", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "주문하는 사용자 ID", example = "user1", requiredMode = Schema.RequiredMode.REQUIRED)
     private String userId;
 
     @NotNull(message = "주문 상품 리스트는 필수입니다.")
@@ -27,6 +28,7 @@ public class OrderRequest {
     @Schema(description = "주문 상품 리스트", requiredMode = Schema.RequiredMode.REQUIRED)
     private List<OrderItem> orderItemList;
 
+    @Nullable
     @Schema(description = "적용할 쿠폰 ID", example = "550e8400-e29b-41d4-a716-446655440000")
     private String appliedCouponId;
 

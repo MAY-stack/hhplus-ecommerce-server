@@ -16,7 +16,7 @@ import lombok.Setter;
 @Schema(description = "주문 생성 응답 데이터 구조")
 public class OrderResponse {
     @Schema(description = "주문 ID", example = "123")
-    private final Long id;
+    private final Long orderId;
 
     @Schema(description = "주문한 사용자 ID", example = "123")
     private final String userId;

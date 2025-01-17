@@ -14,7 +14,7 @@ import lombok.Setter;
 public class OrderItem {
 
     @NotNull
-    @Schema(description = "상품 ID", example = "123", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "상품 ID", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
     private Long productId;
 
     @Min(value = 1, message = "최소 주문 수량은 1개입니다.")

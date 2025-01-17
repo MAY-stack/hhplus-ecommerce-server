@@ -12,7 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ProductResponse {
     @Schema(description = "제품 ID", example = "1")
-    private Long id;
+    private Long productId;
 
     @Schema(description = "제품 이름", example = "Smartphone")
     private String name;
