@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.interfaces.copon.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,6 +9,7 @@ import lombok.Setter;
 @Setter
 @Schema(description = "쿠폰 발급 요청 데이터 구조")
 public class CouponIssueRequest {
-    @Schema(description = "쿠폰 ID", example = "789", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotNull
+    @Schema(description = "쿠폰 ID", example = "2", requiredMode = Schema.RequiredMode.REQUIRED)
     private Long couponId;
 }

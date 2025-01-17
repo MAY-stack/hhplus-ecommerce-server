@@ -9,6 +9,6 @@ import lombok.Setter;
 @Setter
 public class PointRechargeRequest {
     @Min(value = 1, message = "충전 포인트는 최소 1 이상이어야 합니다.")
-    @Schema(description = "충전 요청 포인트", example = "30000", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "충전 요청 포인트", example = "500000", requiredMode = Schema.RequiredMode.REQUIRED)
     private Long amount;
 }
