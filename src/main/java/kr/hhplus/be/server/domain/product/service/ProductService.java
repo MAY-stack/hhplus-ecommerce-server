@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.domain.product.service;
 
+import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.common.exception.ErrorMessage;
 import kr.hhplus.be.server.domain.product.entity.Product;
 import kr.hhplus.be.server.domain.product.repository.ProductRepository;
@@ -23,6 +24,7 @@ public class ProductService {
     }
 
     // 제품 조회 및 재고 수량 감소
+    @Transactional
     public Product validateStockAndReduceQuantityWithLock(Long productId, Integer quantity) {
         Product product = productRepository.findByIdWithLock(productId)
                 .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.PRODUCT_NOT_FOUND.getMessage()));
