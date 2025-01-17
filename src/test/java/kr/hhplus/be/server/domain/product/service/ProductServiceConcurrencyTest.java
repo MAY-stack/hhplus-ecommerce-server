@@ -39,7 +39,7 @@ class ProductServiceConcurrencyTest {
     }
 
     @Test
-    void 동시_재고_차감_테스트() throws InterruptedException {
+    void 재고_차감_동시성_테스트() throws InterruptedException {
         ExecutorService executorService = Executors.newFixedThreadPool(THREAD_COUNT);
         List<Future<String>> results = new ArrayList<>();
 
