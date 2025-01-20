@@ -10,10 +10,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.scheduling.support.SimpleTriggerContext;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,21 +37,18 @@ class ScheduledTaskTest {
         CronTrigger trigger = new CronTrigger(cronExpression);
 
         LocalDateTime currentTime = LocalDateTime.of(2024, 1, 9, 0, 0, 0);
-        Date currentDate = Date.from(currentTime.atZone(ZoneId.systemDefault()).toInstant());
+        Instant currentInstant = currentTime.atZone(ZoneId.systemDefault()).toInstant();
 
         // When
         List<LocalDateTime> nextExecutions = new ArrayList<>();
-        Date nextExecutionTime = currentDate;
+        Instant nextExecutionInstant = currentInstant;
         SimpleTriggerContext triggerContext = new SimpleTriggerContext();
 
         for (int i = 0; i < 5; i++) {
-            triggerContext.update(nextExecutionTime, nextExecutionTime, nextExecutionTime);
-            nextExecutionTime = trigger.nextExecutionTime(triggerContext);
+            triggerContext.update(nextExecutionInstant, nextExecutionInstant, nextExecutionInstant);
+            nextExecutionInstant = trigger.nextExecution(triggerContext);
 
-            LocalDateTime nextExecution = LocalDateTime.ofInstant(
-                    nextExecutionTime.toInstant(),
-                    ZoneId.systemDefault()
-            );
+            LocalDateTime nextExecution = LocalDateTime.ofInstant(nextExecutionInstant, ZoneId.systemDefault());
             nextExecutions.add(nextExecution);
         }
 
