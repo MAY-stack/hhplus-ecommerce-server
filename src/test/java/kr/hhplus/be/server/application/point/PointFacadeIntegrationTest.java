@@ -1,10 +1,13 @@
 package kr.hhplus.be.server.application.point;
 
+import kr.hhplus.be.server.ServerApplication;
 import kr.hhplus.be.server.domain.point.entity.Point;
 import kr.hhplus.be.server.domain.point.entity.PointHistory;
 import kr.hhplus.be.server.domain.point.entity.PointHistoryType;
 import kr.hhplus.be.server.domain.point.repository.PointHistoryRepository;
 import kr.hhplus.be.server.domain.point.repository.PointRepository;
+import kr.hhplus.be.server.domain.user.repository.UserRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,17 +15,28 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
+@SpringBootTest(classes = ServerApplication.class)
 class PointFacadeIntegrationTest {
 
     @Autowired
     private PointFacade pointFacade;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private PointRepository pointRepository;
 
     @Autowired
     private PointHistoryRepository pointHistoryRepository;
+
+    @AfterEach
+    void cleanData() {
+        userRepository.deleteAllInBatch();
+        pointRepository.deleteAllInBatch();
+        pointHistoryRepository.deleteAllInBatch();
+    }
+
 
     @Test
     @DisplayName("포인트를 충전하면 충전된 포인트를 저장하고 포인트 내역을 저장한다")
