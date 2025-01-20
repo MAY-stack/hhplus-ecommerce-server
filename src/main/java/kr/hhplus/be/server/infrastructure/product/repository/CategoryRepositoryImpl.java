@@ -22,4 +22,9 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     public List<Category> saveAll(List<Category> categoryList) {
         return categoryJpaRepository.saveAll(categoryList);
     }
+
+    @Override
+    public void deleteAllInBatch() {
+        categoryJpaRepository.deleteAllInBatch();
+    }
 }

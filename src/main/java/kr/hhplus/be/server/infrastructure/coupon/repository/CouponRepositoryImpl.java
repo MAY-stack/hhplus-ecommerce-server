@@ -41,4 +41,9 @@ public class CouponRepositoryImpl implements CouponRepository {
         return couponJpaRepository.findAllByExpirationDate(currentDate);
     }
 
+    @Override
+    public void deleteAllInBatch() {
+        couponJpaRepository.deleteAllInBatch();
+    }
+
 }

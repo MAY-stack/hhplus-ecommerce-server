@@ -28,4 +28,9 @@ public class PointRepositoryImpl implements PointRepository {
     public Optional<Point> findByUserIdWithLock(String userId) {
         return pointJpaRepository.findByUserIdWithLock(userId);
     }
+
+    @Override
+    public void deleteAllInBatch() {
+        pointJpaRepository.deleteAllInBatch();
+    }
 }

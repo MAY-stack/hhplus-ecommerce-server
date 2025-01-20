@@ -12,4 +12,6 @@ public interface PointRepository {
     Optional<Point> findByUserId(String userId);
 
     Optional<Point> findByUserIdWithLock(String userId);
+
+    void deleteAllInBatch();
 }

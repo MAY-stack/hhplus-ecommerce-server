@@ -1,10 +1,15 @@
 package kr.hhplus.be.server.application.coupon.facade;
 
+import kr.hhplus.be.server.ServerApplication;
 import kr.hhplus.be.server.application.coupon.dto.CouponIssuanceInfoDto;
 import kr.hhplus.be.server.domain.coupon.entity.Coupon;
+import kr.hhplus.be.server.domain.coupon.repository.CouponIssuanceRepository;
+import kr.hhplus.be.server.domain.coupon.repository.CouponRepository;
 import kr.hhplus.be.server.domain.coupon.service.CouponService;
+import kr.hhplus.be.server.domain.user.repository.UserRepository;
 import kr.hhplus.be.server.domain.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +29,7 @@ import java.util.stream.IntStream;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
-@SpringBootTest
+@SpringBootTest(classes = ServerApplication.class)
 @ExtendWith(MockitoExtension.class)
 class CouponFacadeConcurrencyTest {
 
@@ -36,6 +41,15 @@ class CouponFacadeConcurrencyTest {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private CouponRepository couponRepository;
+
+    @Autowired
+    private CouponIssuanceRepository couponIssuanceRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     private Long couponId;
     private static final int THREAD_COUNT = 10;  // 10명의 사용자가 동시에 요청
@@ -54,8 +68,15 @@ class CouponFacadeConcurrencyTest {
 
         // 2. 10명의 테스트 사용자 생성
         IntStream.rangeClosed(1, THREAD_COUNT).forEach(i -> {
-            userService.createUser("user" + i, "테스트 유저" + i);
+            userService.createUser("testUser" + i, "테스트 유저" + i);
         });
+    }
+
+    @AfterEach
+    void cleanData() {
+        couponRepository.deleteAllInBatch();
+        couponIssuanceRepository.deleteAllInBatch();
+        userRepository.deleteAllInBatch();
     }
 
     @Test
@@ -65,11 +86,11 @@ class CouponFacadeConcurrencyTest {
 
         // 10명의 사용자가 동시에 요청을 보냄
         for (int i = 1; i <= THREAD_COUNT; i++) {
-            final String userId = "user" + i;
+            final String userId = "testUser" + i;
             Future<String> future = executorService.submit(() -> {
                 try {
                     CouponIssuanceInfoDto issuedCoupon = couponFacade.issueCoupon(couponId, userId);
-                    return "SUCCESS: " + issuedCoupon.getUserId();
+                    return "SUCCESS: " + issuedCoupon.userId();
                 } catch (Exception e) {
                     return "FAILED: " + userId;
                 }

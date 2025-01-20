@@ -10,4 +10,6 @@ public interface PointHistoryRepository {
     PointHistory save(PointHistory pointHistory);
 
     List<PointHistory> findAllByPointId(Long pointId);
+
+    void deleteAllInBatch();
 }

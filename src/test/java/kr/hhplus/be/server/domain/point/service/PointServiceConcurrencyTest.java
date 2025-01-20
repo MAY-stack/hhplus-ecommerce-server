@@ -38,7 +38,7 @@ class PointServiceConcurrencyTest {
     @BeforeEach
     void setUp() {
         // 1명의 사용자 생성
-        userId = "user1";
+        userId = "testUser1";
         userService.createUser(userId, "테스트유저");
 
         // 사용자에게 10,000 포인트 부여

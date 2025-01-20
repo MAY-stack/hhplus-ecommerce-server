@@ -24,4 +24,6 @@ public interface CouponRepository {
     Coupon save(Coupon coupon);
 
     List<Coupon> findAllByExpirationDate(LocalDate currentDate);
+
+    void deleteAllInBatch();
 }

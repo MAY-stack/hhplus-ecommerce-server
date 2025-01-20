@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.application.order.facade;
 
+import kr.hhplus.be.server.ServerApplication;
 import kr.hhplus.be.server.application.order.dto.OrderAndPaymentResultDto;
 import kr.hhplus.be.server.application.order.dto.OrderDto;
 import kr.hhplus.be.server.application.order.dto.OrderItemDto;
@@ -12,6 +13,7 @@ import kr.hhplus.be.server.domain.coupon.repository.CouponRepository;
 import kr.hhplus.be.server.domain.order.entity.OrderDetail;
 import kr.hhplus.be.server.domain.order.entity.OrderStatus;
 import kr.hhplus.be.server.domain.order.repository.OrderDetailRepository;
+import kr.hhplus.be.server.domain.order.repository.OrderRepository;
 import kr.hhplus.be.server.domain.payment.entity.PaymentStatus;
 import kr.hhplus.be.server.domain.point.entity.Point;
 import kr.hhplus.be.server.domain.point.repository.PointRepository;
@@ -19,19 +21,18 @@ import kr.hhplus.be.server.domain.product.entity.Product;
 import kr.hhplus.be.server.domain.product.repository.ProductRepository;
 import kr.hhplus.be.server.domain.user.entity.User;
 import kr.hhplus.be.server.domain.user.repository.UserRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@Transactional
+@SpringBootTest(classes = ServerApplication.class)
 class OrderFacadeIntegrationTest {
 
     @Autowired
@@ -53,7 +54,21 @@ class OrderFacadeIntegrationTest {
     private CouponIssuanceRepository couponIssuanceRepository;
 
     @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
     private OrderDetailRepository orderDetailRepository;
+
+    @AfterEach
+    void cleanData() {
+        userRepository.deleteAllInBatch();
+        pointRepository.deleteAllInBatch();
+        couponRepository.deleteAllInBatch();
+        couponIssuanceRepository.deleteAllInBatch();
+        productRepository.deleteAllInBatch();
+        orderRepository.deleteAllInBatch();
+        orderDetailRepository.deleteAllInBatch();
+    }
 
     @Test
     void makeOrderAndProcessPayment_ShouldCompleteOrderAndDeductPoints() {
@@ -72,8 +87,8 @@ class OrderFacadeIntegrationTest {
 
         // Assert
         assertThat(result).isNotNull();
-        assertThat(result.getOrderStatus()).isEqualTo(OrderStatus.COMPLETED);
-        assertThat(result.getPaymentStatus()).isEqualTo(PaymentStatus.COMPLETED);
+        assertThat(result.orderStatus()).isEqualTo(OrderStatus.COMPLETED);
+        assertThat(result.paymentStatus()).isEqualTo(PaymentStatus.COMPLETED);
 
         // Verify point deduction
         Point updatedPoint = pointRepository.findByUserId(user.getId()).orElseThrow();

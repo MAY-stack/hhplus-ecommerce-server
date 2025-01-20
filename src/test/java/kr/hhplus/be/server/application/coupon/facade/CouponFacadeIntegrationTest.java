@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.application.coupon.facade;
 
+import kr.hhplus.be.server.ServerApplication;
 import kr.hhplus.be.server.application.coupon.dto.CouponIssuanceInfoDto;
 import kr.hhplus.be.server.domain.coupon.entity.Coupon;
 import kr.hhplus.be.server.domain.coupon.entity.CouponIssuance;
@@ -8,6 +9,7 @@ import kr.hhplus.be.server.domain.coupon.repository.CouponIssuanceRepository;
 import kr.hhplus.be.server.domain.coupon.repository.CouponRepository;
 import kr.hhplus.be.server.domain.user.entity.User;
 import kr.hhplus.be.server.domain.user.repository.UserRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +20,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
+@SpringBootTest(classes = ServerApplication.class)
 class CouponFacadeIntegrationTest {
 
     @Autowired
@@ -33,11 +35,18 @@ class CouponFacadeIntegrationTest {
     @Autowired
     private UserRepository userRepository;
 
+    @AfterEach
+    void cleanData() {
+        couponRepository.deleteAllInBatch();
+        couponIssuanceRepository.deleteAllInBatch();
+        userRepository.deleteAllInBatch();
+    }
+
     @Test
     @DisplayName("쿠폰 발급을 요청하면 쿠폰이 발급되고 쿠폰의 잔여수량을 감량한다")
     void issueCoupon_ShouldIssueCouponAndDecreaseRemaining() {
         // Arrange
-        User user = new User("testUser", "Test User");
+        User user = new User("testUser123", "Test User");
         userRepository.save(user);
 
         Coupon coupon = new Coupon("Test Coupon", 1000L, 5000L, 10, LocalDate.now().plusDays(1));
@@ -48,8 +57,8 @@ class CouponFacadeIntegrationTest {
 
         // Assert
         assertThat(issuedCoupon).isNotNull();
-        assertThat(issuedCoupon.getCouponId()).isEqualTo(coupon.getId());
-        assertThat(issuedCoupon.getUserId()).isEqualTo(user.getId());
+        assertThat(issuedCoupon.couponId()).isEqualTo(coupon.getId());
+        assertThat(issuedCoupon.userId()).isEqualTo(user.getId());
 
         Coupon updatedCoupon = couponRepository.findById(coupon.getId()).orElseThrow();
         assertThat(updatedCoupon.getRemainingQuantity()).isEqualTo(9); // Remaining quantity should decrease by 1
@@ -59,10 +68,10 @@ class CouponFacadeIntegrationTest {
     @DisplayName("사용자에게 발급된 쿠폰에 대한 정보 리스트를 조회할 수 있다")
     void getIssuedCouponList_ShouldReturnIssuedCouponsForUser() {
         // Arrange
-        User user = new User("testUser", "Test User");
+        User user = new User("testUser234", "Test User");
         userRepository.save(user);
 
-        Coupon coupon = new Coupon("Test Coupon", 1000L, 5000L, 10, LocalDate.now().plusDays(1));
+        Coupon coupon = new Coupon("Test Coupon1", 1000L, 5000L, 10, LocalDate.now().plusDays(1));
         couponRepository.save(coupon);
 
         CouponIssuance couponIssuance = new CouponIssuance(coupon.getId(), user.getId());
@@ -73,8 +82,8 @@ class CouponFacadeIntegrationTest {
 
         // Assert
         assertThat(issuedCoupons).hasSize(1);
-        assertThat(issuedCoupons.get(0).getCouponId()).isEqualTo(coupon.getId());
-        assertThat(issuedCoupons.get(0).getUserId()).isEqualTo(user.getId());
+        assertThat(issuedCoupons.get(0).couponId()).isEqualTo(coupon.getId());
+        assertThat(issuedCoupons.get(0).userId()).isEqualTo(user.getId());
     }
 
     @Test
@@ -92,7 +101,7 @@ class CouponFacadeIntegrationTest {
 
         couponRepository.save(expiredCoupon);
 
-        CouponIssuance couponIssuance = new CouponIssuance(expiredCoupon.getId(), "testUser");
+        CouponIssuance couponIssuance = new CouponIssuance(expiredCoupon.getId(), "testUser3S");
         couponIssuanceRepository.save(couponIssuance);
 
         // Act

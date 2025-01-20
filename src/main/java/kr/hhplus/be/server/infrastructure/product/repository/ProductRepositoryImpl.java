@@ -51,4 +51,9 @@ public class ProductRepositoryImpl implements ProductRepository {
     public List<Product> findAllById(List<Long> productIds) {
         return productJpaRepository.findAllById(productIds);
     }
+
+    @Override
+    public void deleteAllInBatch() {
+        productJpaRepository.deleteAllInBatch();
+    }
 }

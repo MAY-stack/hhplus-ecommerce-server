@@ -10,4 +10,6 @@ public interface CategoryRepository {
     Category save(Category category);
 
     List<Category> saveAll(List<Category> categoryList);
+
+    void deleteAllInBatch();
 }

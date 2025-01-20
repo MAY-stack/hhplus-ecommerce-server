@@ -12,4 +12,6 @@ public interface UserRepository {
     Optional<User> findById(String userId);
 
     User save(User user);
+
+    void deleteAllInBatch();
 }
