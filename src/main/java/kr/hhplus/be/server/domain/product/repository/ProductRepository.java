@@ -23,4 +23,6 @@ public interface ProductRepository {
     Page<Product> findAllByCategoryId(Long categoryId, Pageable pageable);
 
     List<Product> findAllById(List<Long> productIds);
+
+    void deleteAllInBatch();
 }

@@ -24,4 +24,9 @@ public class OrderDetailRepositoryImpl implements OrderDetailRepository {
     public List<Object[]> findTopSellingProducts(LocalDateTime startDate, Pageable pageable) {
         return orderDetailJpaRepository.findTopSellingProductsByDate(startDate, pageable);
     }
+
+    @Override
+    public void deleteAllInBatch() {
+        orderDetailJpaRepository.deleteAllInBatch();
+    }
 }

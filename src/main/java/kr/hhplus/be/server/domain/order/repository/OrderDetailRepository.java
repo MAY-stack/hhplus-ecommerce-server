@@ -13,4 +13,6 @@ public interface OrderDetailRepository {
     OrderDetail save(OrderDetail orderDetail);
 
     List<Object[]> findTopSellingProducts(LocalDateTime startDate, Pageable pageable);
+
+    void deleteAllInBatch();
 }

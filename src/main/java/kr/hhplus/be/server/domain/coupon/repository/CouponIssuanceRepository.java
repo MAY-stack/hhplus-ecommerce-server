@@ -18,4 +18,6 @@ public interface CouponIssuanceRepository {
     List<CouponIssuance> findAllByUserId(String userId);
 
     List<CouponIssuance> findByCouponIdAndStatus(Long couponId, IssuedCouponStatus status);
+
+    void deleteAllInBatch();
 }

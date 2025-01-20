@@ -28,4 +28,9 @@ public class UserRepositoryImpl implements UserRepository {
     public Optional<User> findById(String userId) {
         return userJpaRepository.findById(userId);
     }
+
+    @Override
+    public void deleteAllInBatch() {
+        userJpaRepository.deleteAllInBatch();
+    }
 }

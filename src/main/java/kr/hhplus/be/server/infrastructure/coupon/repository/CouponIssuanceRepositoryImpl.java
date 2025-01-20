@@ -43,4 +43,9 @@ public class CouponIssuanceRepositoryImpl implements CouponIssuanceRepository {
     public List<CouponIssuance> findByCouponIdAndStatus(Long couponId, IssuedCouponStatus status) {
         return couponIssuanceJpaRepository.findAllByCouponIdAndStatus(couponId, status);
     }
+
+    @Override
+    public void deleteAllInBatch() {
+        couponIssuanceJpaRepository.deleteAllInBatch();
+    }
 }
