@@ -178,9 +178,9 @@ e-커머스 서비스 vs 콘서트 예약 서비스
 
 - Point
   ![Swagger-point](docs/images/swagger/swagger-point.png)
-- Coupon
+- Coupon   
   ![Swagger-coupon](docs/images/swagger/swagger-coupon.png)
-- Product
+- Product   
   ![Swagger-product](docs/images/swagger/swagger-product.png)
 - Order
   ![Swagger-order](docs/images/swagger/swagger-order.png)
