@@ -69,7 +69,7 @@ class CouponFacadeConcurrencyTest {
             Future<String> future = executorService.submit(() -> {
                 try {
                     CouponIssuanceInfoDto issuedCoupon = couponFacade.issueCoupon(couponId, userId);
-                    return "SUCCESS: " + issuedCoupon.getUserId();
+                    return "SUCCESS: " + issuedCoupon.userId();
                 } catch (Exception e) {
                     return "FAILED: " + userId;
                 }

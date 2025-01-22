@@ -72,8 +72,8 @@ class OrderFacadeIntegrationTest {
 
         // Assert
         assertThat(result).isNotNull();
-        assertThat(result.getOrderStatus()).isEqualTo(OrderStatus.COMPLETED);
-        assertThat(result.getPaymentStatus()).isEqualTo(PaymentStatus.COMPLETED);
+        assertThat(result.orderStatus()).isEqualTo(OrderStatus.COMPLETED);
+        assertThat(result.paymentStatus()).isEqualTo(PaymentStatus.COMPLETED);
 
         // Verify point deduction
         Point updatedPoint = pointRepository.findByUserId(user.getId()).orElseThrow();

@@ -48,8 +48,8 @@ class CouponFacadeIntegrationTest {
 
         // Assert
         assertThat(issuedCoupon).isNotNull();
-        assertThat(issuedCoupon.getCouponId()).isEqualTo(coupon.getId());
-        assertThat(issuedCoupon.getUserId()).isEqualTo(user.getId());
+        assertThat(issuedCoupon.couponId()).isEqualTo(coupon.getId());
+        assertThat(issuedCoupon.userId()).isEqualTo(user.getId());
 
         Coupon updatedCoupon = couponRepository.findById(coupon.getId()).orElseThrow();
         assertThat(updatedCoupon.getRemainingQuantity()).isEqualTo(9); // Remaining quantity should decrease by 1
@@ -73,8 +73,8 @@ class CouponFacadeIntegrationTest {
 
         // Assert
         assertThat(issuedCoupons).hasSize(1);
-        assertThat(issuedCoupons.get(0).getCouponId()).isEqualTo(coupon.getId());
-        assertThat(issuedCoupons.get(0).getUserId()).isEqualTo(user.getId());
+        assertThat(issuedCoupons.get(0).couponId()).isEqualTo(coupon.getId());
+        assertThat(issuedCoupons.get(0).userId()).isEqualTo(user.getId());
     }
 
     @Test
