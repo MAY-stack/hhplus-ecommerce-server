@@ -36,6 +36,9 @@ public class Product {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+//    @Version  // 낙관적 락 적용
+//    private int version;
+
     public Product(String name, Long price, Integer stock, Long categoryId) {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException(ErrorMessage.PRODUCT_NAME_REQUIRED.getMessage());

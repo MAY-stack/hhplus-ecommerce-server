@@ -1,6 +1,5 @@
 package kr.hhplus.be.server.application.order.facade;
 
-import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.application.external.dto.ExternalRequestDto;
 import kr.hhplus.be.server.application.external.service.ExternalDataPlatformService;
 import kr.hhplus.be.server.application.order.dto.OrderAndPaymentResultDto;
@@ -28,6 +27,7 @@ import kr.hhplus.be.server.domain.user.entity.User;
 import kr.hhplus.be.server.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -90,7 +90,7 @@ public class OrderFacade {
         Payment payment;
         try {
             // 포인트 차감 처리, 차감 기록
-            Point point = pointService.deductPoint(userId, finalAmount);
+            Point point = pointService.deductPointWithLock(userId, finalAmount);
             pointHistoryService.createPointHistory(point.getId(), PointHistoryType.DEDUCT, finalAmount);
 
             // 결제 성공 처리

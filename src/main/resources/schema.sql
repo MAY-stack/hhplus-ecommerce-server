@@ -35,6 +35,7 @@ CREATE TABLE product
     category_id BIGINT,
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+-- ,    version     INT       DEFAULT 0 -- 낙관적 락 (JPA @Version)
 );
 
 -- Coupon 테이블 생성
@@ -47,6 +48,7 @@ CREATE TABLE coupon
     remaining_quantity   INT          NOT NULL,
     total_quantity       INT          NOT NULL,
     expiration_date      DATE         NOT NULL
+-- ,    version              INT DEFAULT 0 -- 낙관적 락 (JPA @Version)
 );
 
 -- Coupon_Issuance 테이블 생성
@@ -106,6 +108,7 @@ CREATE TABLE point
     user_id    VARCHAR(50) NOT NULL,
     balance    BIGINT      NOT NULL DEFAULT 0,
     updated_at TIMESTAMP            DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+-- ,    version    INT                  DEFAULT 0 -- 낙관적 락 (JPA @Version)
 );
 
 -- Point_History 테이블 생성

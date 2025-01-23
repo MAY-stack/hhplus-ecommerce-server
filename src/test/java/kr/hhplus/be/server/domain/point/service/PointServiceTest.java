@@ -96,7 +96,7 @@ class PointServiceTest {
         when(pointRepository.save(any(Point.class))).thenReturn(point);
 
         // Act
-        Point updatedPoint = pointService.rechargePoint(userId, amount);
+        Point updatedPoint = pointService.rechargePointWithLock(userId, amount);
 
         // Assert
         assertThat(updatedPoint.getBalance()).isEqualTo(1500L); // 1000 + 500
@@ -115,7 +115,7 @@ class PointServiceTest {
         when(pointRepository.findByUserIdWithLock(userId)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThatThrownBy(() -> pointService.rechargePoint(userId, amount))
+        assertThatThrownBy(() -> pointService.rechargePointWithLock(userId, amount))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ErrorMessage.POINT_NOT_FOUND.getMessage());
         verify(pointRepository, times(1)).findByUserIdWithLock(userId);
@@ -135,7 +135,7 @@ class PointServiceTest {
         when(pointRepository.save(any(Point.class))).thenReturn(point);
 
         // Act
-        Point updatedPoint = pointService.deductPoint(userId, amount);
+        Point updatedPoint = pointService.deductPointWithLock(userId, amount);
 
         // Assert
         assertThat(updatedPoint.getBalance()).isEqualTo(500L); // 1000 - 500
@@ -154,7 +154,7 @@ class PointServiceTest {
         when(pointRepository.findByUserIdWithLock(userId)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThatThrownBy(() -> pointService.deductPoint(userId, amount))
+        assertThatThrownBy(() -> pointService.deductPointWithLock(userId, amount))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ErrorMessage.POINT_NOT_FOUND.getMessage());
         verify(pointRepository, times(1)).findByUserIdWithLock(userId);

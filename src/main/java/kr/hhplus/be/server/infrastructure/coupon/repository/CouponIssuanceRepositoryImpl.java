@@ -1,12 +1,12 @@
 package kr.hhplus.be.server.infrastructure.coupon.repository;
 
-import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.domain.coupon.entity.CouponIssuance;
 import kr.hhplus.be.server.domain.coupon.entity.IssuedCouponStatus;
 import kr.hhplus.be.server.domain.coupon.repository.CouponIssuanceRepository;
 import kr.hhplus.be.server.infrastructure.coupon.jpa.CouponIssuanceJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;

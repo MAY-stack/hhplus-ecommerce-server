@@ -95,7 +95,7 @@ class CouponServiceTest {
         when(couponRepository.save(any(Coupon.class))).thenReturn(coupon);
 
         // Act
-        Coupon updatedCoupon = couponService.decreaseRemaining(couponId);
+        Coupon updatedCoupon = couponService.decreaseRemainingWithLock(couponId);
 
         // Assert
         verify(coupon).decreaseRemaining();
@@ -112,7 +112,7 @@ class CouponServiceTest {
         when(couponRepository.findCouponByIdWithLock(couponId)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThatThrownBy(() -> couponService.decreaseRemaining(couponId))
+        assertThatThrownBy(() -> couponService.decreaseRemainingWithLock(couponId))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ErrorMessage.COUPON_NOT_FOUND.getMessage());
         verify(couponRepository, times(1)).findCouponByIdWithLock(couponId);

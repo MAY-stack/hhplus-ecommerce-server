@@ -60,7 +60,10 @@ public enum ErrorMessage {
 
     // 결제
     MINIMUM_PAYMENT_AMOUNT_VIOLATION("최소 결제 금액은 1원입니다."),
-    PAYMENT_STATUS_REQUIRED("결제 상태는 필수입니다.");
+    PAYMENT_STATUS_REQUIRED("결제 상태는 필수입니다."),
+
+    // Lock
+    LOCK_NOT_AVAILABLE("현재 리소스가 잠겨 있어 처리할 수 없습니다.");
 
     private final String message;
 
