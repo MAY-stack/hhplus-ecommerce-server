@@ -52,12 +52,9 @@ public class ProductRepositoryImpl implements ProductRepository {
         return productJpaRepository.findAllById(productIds);
     }
 
-<<<<<<< Updated upstream
     @Override
     public void deleteAllInBatch() {
         productJpaRepository.deleteAllInBatch();
     }
-=======
 
->>>>>>> Stashed changes
 }

@@ -23,13 +23,28 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    // 제품 조회 및 재고 수량 감소
+    // 제품 조회 및 재고 수량 감소 ( 비관적 락 )
     @Transactional
     public Product validateStockAndReduceQuantityWithLock(Long productId, Integer quantity) {
         Product product = productRepository.findByIdWithLock(productId)
                 .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.PRODUCT_NOT_FOUND.getMessage()));
         product.reduceStock(quantity);
         return productRepository.save(product);
+    }
+
+    // 제품 조회 및 재고 수량 감소
+    @Transactional
+//    @Retryable(
+//            retryFor = ObjectOptimisticLockingFailureException.class,
+//            maxAttempts = 5,  // 최대 5번 재시도
+//            backoff = @Backoff(delay = 100) // 100ms 대기 후 재시도
+//    )
+//    @DistributedLock(key = "Product_Stock")
+    public void validateStockAndReduceQuantity(Long productId, Integer quantity) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.PRODUCT_NOT_FOUND.getMessage()));
+        product.reduceStock(quantity);
+        productRepository.save(product);
     }
 
     // 제품 목록 조회
