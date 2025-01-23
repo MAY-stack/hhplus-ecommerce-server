@@ -1,6 +1,5 @@
 package kr.hhplus.be.server.domain.product.service;
 
-import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.common.exception.ErrorMessage;
 import kr.hhplus.be.server.domain.product.entity.Product;
 import kr.hhplus.be.server.domain.product.repository.ProductRepository;
@@ -8,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 

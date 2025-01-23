@@ -1,12 +1,13 @@
 package kr.hhplus.be.server.domain.point.service;
 
-import jakarta.transaction.Transactional;
+
 import kr.hhplus.be.server.common.exception.ErrorMessage;
 import kr.hhplus.be.server.domain.point.entity.Point;
 import kr.hhplus.be.server.domain.point.repository.PointHistoryRepository;
 import kr.hhplus.be.server.domain.point.repository.PointRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
