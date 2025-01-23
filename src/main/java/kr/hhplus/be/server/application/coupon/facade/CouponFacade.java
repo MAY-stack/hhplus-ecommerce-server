@@ -28,7 +28,7 @@ public class CouponFacade {
         User user = userService.getUserById(userId);
 
         // 남은 수량 감소 및 저장
-        Coupon coupon = couponService.decreaseRemaining(couponId);
+        Coupon coupon = couponService.decreaseRemainingWithLock(couponId);
 
         // 쿠폰 발급 및 저장
         CouponIssuance couponIssuance = couponIssuanceService.issueCoupon(coupon.getId(), user.getId());

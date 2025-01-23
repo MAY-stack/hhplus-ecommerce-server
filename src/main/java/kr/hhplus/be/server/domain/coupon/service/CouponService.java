@@ -5,6 +5,9 @@ import kr.hhplus.be.server.common.exception.ErrorMessage;
 import kr.hhplus.be.server.domain.coupon.entity.Coupon;
 import kr.hhplus.be.server.domain.coupon.repository.CouponRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,15 +32,32 @@ public class CouponService {
                 .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.COUPON_NOT_FOUND.getMessage()));
     }
 
-    // 쿠폰 수량 감소
+    // 쿠폰 수량 감소 (비관적 락)
     @Transactional
-    public Coupon decreaseRemaining(Long couponId) {
+    public Coupon decreaseRemainingWithLock(Long couponId) {
         // 락을 사용해 쿠폰 조회
         Coupon coupon = couponRepository.findCouponByIdWithLock(couponId)
                 .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.COUPON_NOT_FOUND.getMessage()));
         coupon.decreaseRemaining(); // 수량 감소
         return couponRepository.save(coupon);
     }
+
+    // 쿠폰 수량 감소
+    @Transactional
+    @Retryable(
+            retryFor = ObjectOptimisticLockingFailureException.class, // 낙관적 락 충돌 시 재시도
+            maxAttempts = 5,  // 최대 5번 재시도
+            backoff = @Backoff(delay = 100) // 100ms 대기 후 재시도
+    )
+//    @DistributedLock(key = "coupon_issue")
+    public Coupon decreaseRemaining(Long couponId) {
+        // 락을 사용해 쿠폰 조회
+        Coupon coupon = couponRepository.findById(couponId)
+                .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.COUPON_NOT_FOUND.getMessage()));
+        coupon.decreaseRemaining(); // 수량 감소
+        return couponRepository.save(coupon);
+    }
+
 
     // 만료된 쿠폰아이디 조회(전일이 만료일인 쿠폰 아이디 조회)
     public List<Long> getAllExpiredCouponIds() {
