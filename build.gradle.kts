@@ -40,6 +40,13 @@ dependencies {
     implementation("org.springframework.retry:spring-retry:2.0.3")
     implementation("org.springframework.boot:spring-boot-starter-aop")
 
+    // Redis
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
+
+    // AOP
+    implementation("org.springframework.boot:spring-boot-starter-aop")
+    implementation("org.redisson:redisson-spring-boot-starter:3.23.4")
+
     // DB
     runtimeOnly("com.mysql:mysql-connector-j")
 

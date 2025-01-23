@@ -2,6 +2,7 @@
 services:
   mysql:
     image: mysql:8.0
+    container_name: mysql_container
     ports:
       - "3306:3306"
     environment:
@@ -11,6 +12,17 @@ services:
       - MYSQL_DATABASE=hhplus
     volumes:
       - ./data/mysql/:/var/lib/mysql
+
+  redis:
+    image: redis:7
+    container_name: redis_container
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data/redis:/data
+    networks:
+      - default
 
 networks:
   default:
