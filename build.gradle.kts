@@ -36,6 +36,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
 
+    // spring-retry
+    implementation("org.springframework.retry:spring-retry:2.0.3")
+    implementation("org.springframework.boot:spring-boot-starter-aop")
+
     // DB
     runtimeOnly("com.mysql:mysql-connector-j")
 
