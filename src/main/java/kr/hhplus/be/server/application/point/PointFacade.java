@@ -20,7 +20,7 @@ public class PointFacade {
     public Point rechargePointWithHistory(String userId, Long amount) {
         Point point = pointService.getPointByUserId(userId);
         // 포인트 충전
-        pointService.rechargePoint(userId, amount);
+        pointService.rechargePointWithLock(userId, amount);
         // 충전 기록
         pointHistoryService.createPointHistory(point.getId(), PointHistoryType.RECHARGE, amount);
         return point;

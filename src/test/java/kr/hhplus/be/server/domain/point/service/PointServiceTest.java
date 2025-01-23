@@ -92,15 +92,15 @@ class PointServiceTest {
         Long amount = 500L;
         Point point = new Point(userId, 1000L);
 
-        when(pointRepository.findByUserIdWithLock(userId)).thenReturn(Optional.of(point));
+        when(pointRepository.findByUserId(userId)).thenReturn(Optional.of(point));
         when(pointRepository.save(any(Point.class))).thenReturn(point);
 
         // Act
-        Point updatedPoint = pointService.rechargePoint(userId, amount);
+        Point updatedPoint = pointService.rechargePointWithLock(userId, amount);
 
         // Assert
         assertThat(updatedPoint.getBalance()).isEqualTo(1500L); // 1000 + 500
-        verify(pointRepository, times(1)).findByUserIdWithLock(userId);
+        verify(pointRepository, times(1)).findByUserId(userId);
         verify(pointRepository, times(1)).save(point);
     }
 
@@ -112,13 +112,13 @@ class PointServiceTest {
         String userId = "user123";
         Long amount = 500L;
 
-        when(pointRepository.findByUserIdWithLock(userId)).thenReturn(Optional.empty());
+        when(pointRepository.findByUserId(userId)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThatThrownBy(() -> pointService.rechargePoint(userId, amount))
+        assertThatThrownBy(() -> pointService.rechargePointWithLock(userId, amount))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ErrorMessage.POINT_NOT_FOUND.getMessage());
-        verify(pointRepository, times(1)).findByUserIdWithLock(userId);
+        verify(pointRepository, times(1)).findByUserId(userId);
         verify(pointRepository, never()).save(any(Point.class));
     }
 
@@ -131,15 +131,15 @@ class PointServiceTest {
         Long amount = 500L;
         Point point = new Point(userId, 1000L);
 
-        when(pointRepository.findByUserIdWithLock(userId)).thenReturn(Optional.of(point));
+        when(pointRepository.findByUserId(userId)).thenReturn(Optional.of(point));
         when(pointRepository.save(any(Point.class))).thenReturn(point);
 
         // Act
-        Point updatedPoint = pointService.deductPoint(userId, amount);
+        Point updatedPoint = pointService.deductPointWithLock(userId, amount);
 
         // Assert
         assertThat(updatedPoint.getBalance()).isEqualTo(500L); // 1000 - 500
-        verify(pointRepository, times(1)).findByUserIdWithLock(userId);
+        verify(pointRepository, times(1)).findByUserId(userId);
         verify(pointRepository, times(1)).save(point);
     }
 
@@ -151,13 +151,13 @@ class PointServiceTest {
         String userId = "user123";
         Long amount = 500L;
 
-        when(pointRepository.findByUserIdWithLock(userId)).thenReturn(Optional.empty());
+        when(pointRepository.findByUserId(userId)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThatThrownBy(() -> pointService.deductPoint(userId, amount))
+        assertThatThrownBy(() -> pointService.deductPointWithLock(userId, amount))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ErrorMessage.POINT_NOT_FOUND.getMessage());
-        verify(pointRepository, times(1)).findByUserIdWithLock(userId);
+        verify(pointRepository, times(1)).findByUserId(userId);
         verify(pointRepository, never()).save(any(Point.class));
     }
 

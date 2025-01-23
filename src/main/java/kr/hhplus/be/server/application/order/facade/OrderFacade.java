@@ -90,7 +90,7 @@ public class OrderFacade {
         Payment payment;
         try {
             // 포인트 차감 처리, 차감 기록
-            Point point = pointService.deductPoint(userId, finalAmount);
+            Point point = pointService.deductPointWithLock(userId, finalAmount);
             pointHistoryService.createPointHistory(point.getId(), PointHistoryType.DEDUCT, finalAmount);
 
             // 결제 성공 처리
