@@ -34,6 +34,9 @@ public class Coupon {
     @Column(nullable = false)
     private LocalDate expirationDate;
 
+//    @Version  // 낙관적 락 적용
+//    private int version;
+
     public Coupon(String title, Long discountAmount, Long minimumOrderAmount, Integer totalQuantity, LocalDate expirationDate) {
         if (title == null || title.isBlank()) {
             throw new IllegalArgumentException(ErrorMessage.COUPON_TITLE_REQUIRED.getMessage());

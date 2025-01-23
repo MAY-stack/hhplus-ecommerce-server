@@ -30,6 +30,9 @@ public class Point {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+//    @Version  // 낙관적 락 적용
+//    private int version;
+
     // 사용자 ID로 Point 생성 (초기 잔액 0)
     public Point(String userId, Long initialBalance) {
         if (userId == null || userId.isBlank()) {
