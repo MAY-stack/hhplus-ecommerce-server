@@ -22,7 +22,7 @@ import java.lang.reflect.Method;
 public class DistributedLockAop {
     private static final String REDISSON_LOCK_PREFIX = "LOCK:";
     private final RedissonClient redissonClient; // Redisson Client 객체 주입
-    private final AopForTransaction aopForTransaction; // 트랜잭션 관리를 위한 AOP
+//    private final AopForTransaction aopForTransaction; // 트랜잭션 관리를 위한 AOP
 
     @Around("@annotation(kr.hhplus.be.server.infrastructure.lock.DistributedLock)")
     public Object lock(final ProceedingJoinPoint joinPoint) throws Throwable {
@@ -50,9 +50,9 @@ public class DistributedLockAop {
             }
             log.info("get lock");
 
-            // 4. 락을 획득한 경우, 트랜잭션과 함께 메서드 실행
-            return aopForTransaction.proceed(joinPoint);
-
+            // 4. 락을 획득한 경우, 트랜잭션과 함께 메서드 실행 -> 락과 트랜잭션 생성 분리
+//            return aopForTransaction.proceed(joinPoint);
+            return joinPoint.proceed();
         } catch (InterruptedException e) {
             // 5. 락을 기다리는 동안 인터럽트 발생 시 예외 처리
             throw new IllegalStateException(ErrorMessage.LOCK_NOT_AVAILABLE.getMessage());

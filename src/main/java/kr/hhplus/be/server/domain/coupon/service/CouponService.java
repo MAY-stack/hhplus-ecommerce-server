@@ -5,9 +5,6 @@ import kr.hhplus.be.server.common.exception.ErrorMessage;
 import kr.hhplus.be.server.domain.coupon.entity.Coupon;
 import kr.hhplus.be.server.domain.coupon.repository.CouponRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.orm.ObjectOptimisticLockingFailureException;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,11 +41,11 @@ public class CouponService {
 
     // 쿠폰 수량 감소
     @Transactional
-    @Retryable(
-            retryFor = ObjectOptimisticLockingFailureException.class, // 낙관적 락 충돌 시 재시도
-            maxAttempts = 5,  // 최대 5번 재시도
-            backoff = @Backoff(delay = 100) // 100ms 대기 후 재시도
-    )
+//    @Retryable(
+//            retryFor = ObjectOptimisticLockingFailureException.class, // 낙관적 락 충돌 시 재시도
+//            maxAttempts = 5,  // 최대 5번 재시도
+//            backoff = @Backoff(delay = 100) // 100ms 대기 후 재시도
+//    )
 //    @DistributedLock(key = "coupon_issue")
     public Coupon decreaseRemaining(Long couponId) {
         // 락을 사용해 쿠폰 조회
