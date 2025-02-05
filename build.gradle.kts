@@ -43,6 +43,9 @@ dependencies {
     // Redis
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
 
+    // Cache
+    implementation("org.springframework.boot:spring-boot-starter-cache:3.3.4")
+
     // AOP
     implementation("org.springframework.boot:spring-boot-starter-aop")
     implementation("org.redisson:redisson-spring-boot-starter:3.23.4")
