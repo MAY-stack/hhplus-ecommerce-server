@@ -18,6 +18,9 @@
     - [동시성과 관련된 문제](docs/study/concurrency-issues.md)
     - [Lock과 트랜잭션 격리 수준](docs/study/lock-vs-isolation-level.md)
     - [MVCC와 낙관적 락](docs/study/mvcc-and-optimistic-locking.md)
+    - [캐싱](docs/study/cache.md)
 
 - 동시성 제어
     - [발생 가능한 동시성 문제와 제어방식 비교](docs/concurrency_issues_and_control_strategies.md)
+- Redis를 이용한 최적화
+    - [이커머스 서비스의 캐싱 적용 및 성능 개선](docs/redis_optimization.md)

@@ -46,4 +46,9 @@ public class CouponRepositoryImpl implements CouponRepository {
         couponJpaRepository.deleteAllInBatch();
     }
 
+    @Override
+    public int updateRemainingQuantity(Long couponId, int remaining) {
+        return couponJpaRepository.updateRemainingQuantity(couponId, remaining);
+    }
+
 }

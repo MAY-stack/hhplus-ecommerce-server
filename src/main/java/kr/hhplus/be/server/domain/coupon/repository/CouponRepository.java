@@ -26,4 +26,6 @@ public interface CouponRepository {
     List<Coupon> findAllByExpirationDate(LocalDate currentDate);
 
     void deleteAllInBatch();
+
+    int updateRemainingQuantity(Long couponId, int remaining);
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.LockModeType;
 import kr.hhplus.be.server.domain.coupon.entity.Coupon;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -17,4 +18,11 @@ public interface CouponJpaRepository extends JpaRepository<Coupon, Long> {
     Optional<Coupon> findCouponByIdWithLock(@Param("id") Long id);
 
     List<Coupon> findAllByExpirationDate(LocalDate expirationDate);
+
+    @Query("SELECT c.remainingQuantity FROM Coupon c WHERE c.id = :couponId")
+    int findRemainingQuantityById(@Param("couponId") Long couponId);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("UPDATE Coupon c SET c.remainingQuantity = :remaining WHERE c.id = :couponId")
+    int updateRemainingQuantity(@Param("couponId") Long couponId, @Param("remaining") int remaining);
 }
