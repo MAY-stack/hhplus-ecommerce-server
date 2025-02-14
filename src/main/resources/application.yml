@@ -34,3 +34,8 @@ spring:
     redis:
       host: localhost
       port: 6379
+#P6spy
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true

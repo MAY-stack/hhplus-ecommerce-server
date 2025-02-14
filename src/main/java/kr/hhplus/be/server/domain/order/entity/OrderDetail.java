@@ -14,6 +14,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
+@Table(
+        name = "order_detail",
+        indexes = {
+                @Index(name = "idx_order_detail_covering", columnList = "created_at, product_id, quantity")
+        }
+)
 public class OrderDetail {
 
     @Id
