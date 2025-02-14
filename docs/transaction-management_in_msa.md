@@ -193,3 +193,14 @@ https://youtu.be/xpwRTu47fqY?si=ek_oTApmv1uF2Ybe
       **🚀 보상 트랜잭션(Compensating Transaction)**
 
         - 만약 결제가 실패하면, **Orchestrator가 이전 단계(주문 생성) 취소를 위한 보상 트랜잭션을 실행**
+  ## 구현 시나리오
+
+  ### Choreography + Orchestration 혼용
+  ![saga-pattern-design.png](images%2Ftransaction%2Fsaga-pattern-design.png)
+    - 주문 상세 정보 생성 실패 시 → 주문 생성 서비스에 실패 결과 전달 → Ochestration 서버에 주문 생성 실패 전달 → 로직 종료
+    - 재고 감소 실패 시 → Ochestration 서버에 재고 차감 실패 전달 → 주문 생성 롤백
+    - 쿠폰 적용 실패 시 → Ochestration 서버에 쿠폰 적용 실패 전달 → 주문생성 롤백, 재고차감 롤백
+    - 포인트 차감 실패 시 → 결제 실패로 상태 처리 → Ochestration 서버에 결제 실패 전달 → 주문 상태 변경 → 추후 스케줄러로 일정기간 결제 되지 않은 주문 건은 주문취소(재고 차감 롤백, 쿠폰
+      적용
+      취소) 로직 수행
+    - 외부 플랫폼 전송 실패 시 → Ochestration 서버에 실패 전달 → 추후 스케줄러로 일정 주기마다 미 전송된 데이터 일괄 전송
