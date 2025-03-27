@@ -2,7 +2,7 @@
 
 ### 🔹 설계 및 분석
 
-- [E-Commerce 서비스 설계 문서](https://www.notion.so/docs/Ecommerce_Service_Design.md)
+- [E-Commerce 서비스 설계 문서](/docs/ecommerce_system_design.md)
     - 프로젝트 개요 및 도메인 설명
     - 마일스톤 및 개발 일정
     - 요구사항 분석 및 정책 설정
